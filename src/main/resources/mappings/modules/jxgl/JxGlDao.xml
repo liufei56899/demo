@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jxgl.dao.JxGlDao">
+    
+	<sql id="jxGlColumns">
+		a.id AS "id",
+		a.xnxq_id AS "xnxqId",
+		a.kc_id AS "kcId",
+		a.bj_id AS "bjId",
+		a.kcxz AS "kcxz",
+		a.zxs_count AS "zxsCount",
+		a.ywc_count AS "ywcCount",
+		a.xskq AS "xskq",
+		a.skls AS "skls",
+		a.sksj AS "sksj",
+		a.skjssj AS "skjssj",
+		a.jxqk AS "jxqk",
+		a.ktqk AS "ktqk",
+		a.zt AS "zt",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jxGlJoins">
+	</sql>
+    
+	<select id="get" resultType="JxGl">
+		SELECT 
+			<include refid="jxGlColumns"/>
+		FROM jx_gl a
+		<include refid="jxGlJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JxGl">
+		SELECT 
+			<include refid="jxGlColumns"/>
+		FROM jx_gl a
+		<include refid="jxGlJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JxGl">
+		SELECT 
+			<include refid="jxGlColumns"/>
+		FROM jx_gl a
+		<include refid="jxGlJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findMaxKs" resultType="Integer">
+		SELECT 
+        CASE WHEN MAX(a.ywc_count) IS NULL THEN 0 ELSE MAX(a.ywc_count) END ywccount
+        FROM jx_gl a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.xnxq_id =#{xnxqId}
+			and a.kc_id=#{kcId}
+			and a.bj_id=#{bjId}
+		</where>		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jx_gl(
+			id,
+			xnxq_id,
+			kc_id,
+			bj_id,
+			kcxz,
+			zxs_count,
+			ywc_count,
+			xskq,
+			skls,
+			sksj,
+			jxqk,
+			ktqk,
+			zt,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{xnxqId},
+			#{kcId},
+			#{bjId},
+			#{kcxz},
+			#{zxsCount},
+			#{ywcCount},
+			#{xskq},
+			#{skls},
+			#{sksj},
+			#{jxqk},
+			#{ktqk},
+			#{zt},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jx_gl SET 	
+			xnxq_id = #{xnxqId},
+			kc_id = #{kcId},
+			bj_id = #{bjId},
+			kcxz = #{kcxz},
+			zxs_count = #{zxsCount},
+			ywc_count = #{ywcCount},
+			xskq = #{xskq},
+			skls = #{skls},
+			sksj = #{sksj},
+			jxqk = #{jxqk},
+			ktqk = #{ktqk},
+			zt = #{zt},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jx_gl SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

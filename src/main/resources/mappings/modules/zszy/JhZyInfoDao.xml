@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.zszy.dao.JhZyInfoDao">
+    
+	<sql id="jhZyInfoColumns">
+		a.id AS "id",
+		a.zsjh_id AS "zsjhId.id",
+		a.zylx_id AS "zylxId.id",
+		a.zy_id AS "zyId.id",
+		zy.zymc AS "zyId.zymc",
+		zylx.lxmc AS "zylxId.lxmc",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.zsrs AS "zsrs"
+	</sql>
+	
+	<sql id="jhZyInfoJoins">
+		LEFT JOIN zy_jbxx zy ON zy.id = a.zy_id
+		LEFT JOIN sys_dict b on b.value = zy.xz and b.type = 'xzdm'
+		LEFT JOIN zylx_jbxx zylx ON zylx.id = a.zylx_id
+	</sql>
+    
+	<select id="get" resultType="JhZyInfo">
+		SELECT 
+			<include refid="jhZyInfoColumns"/>
+		FROM jh_zy_info a
+		<include refid="jhZyInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findListByJhId" resultType="JhZyInfo">
+		SELECT distinct
+			<include refid="jhZyInfoColumns"/>
+		FROM jh_zy_info a
+		<include refid="jhZyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.zsjh_id = #{zsjhId.id}
+		</where>
+	</select>
+	
+	
+	<select id="findZyListByJhId" resultType="JhZyInfo">
+		SELECT distinct
+			a.zsjh_id AS "zsjhId.id",
+			a.zylx_id AS "zylxId.id",
+			a.zy_id AS "zyId.id",
+			zy.zymc AS "zyId.zymc",
+			b.label AS "zyId.xzmc",
+			zylx.lxmc AS "zylxId.lxmc"
+			FROM jh_zy_info a
+		<include refid="jhZyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.zsjh_id = #{zsjhId.id}
+			<if test="zylxId != null and zylxId.id != null and zylxId.id != ''">
+					AND a.zylx_id = #{zylxId.id}
+			</if>
+		</where>
+	</select>	
+	<select id="findZylxListByJhId" resultType="JhZyInfo">
+		SELECT distinct
+			a.zsjh_id AS "zsjhId.id",
+			a.zylx_id AS "zylxId.id",
+			zylx.lxmc AS "zylxId.lxmc"
+			FROM jh_zy_info a
+		<include refid="jhZyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.zsjh_id = #{zsjhId.id}
+			<if test="zylxId != null and zylxId.id != null and zylxId.id != ''">
+					AND a.zylx_id = #{zylxId.id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="JhZyInfo">
+		SELECT 
+			<include refid="jhZyInfoColumns"/>
+		FROM jh_zy_info a
+		<include refid="jhZyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JhZyInfo">
+		SELECT 
+			<include refid="jhZyInfoColumns"/>
+		FROM jh_zy_info a
+		<include refid="jhZyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jh_zy_info(
+			id,
+			zsjh_id,
+			zylx_id,
+			zy_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			zsrs
+		) VALUES (
+			#{id},
+			#{zsjhId.id},
+			#{zylxId.id},
+			#{zyId.id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{zsrs}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jh_zy_info SET 	
+			zsjh_id = #{zsjhId.id},
+			zylx_id = #{zylxId.id},
+			zy_id = #{zyId.id},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			zsrs = #{zsrs}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jh_zy_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delByJhId">
+	  delete FROM jh_zy_info  
+	  where  zsjh_id = #{zsjhId.id}
+	</delete>
+	
+</mapper>

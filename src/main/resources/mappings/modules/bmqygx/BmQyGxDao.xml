@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.bmqygx.dao.BmQyGxDao">
+    
+	<sql id="bmQyGxColumns">
+		a.id AS "id",
+		a.nf AS "nf",
+		a.xq_id AS "xqId",
+		a.bm_id AS "office.id",
+		a.qy_id AS "area.id",
+		a.sysl AS "sysl",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o4.name AS "office.name",
+		a5.name AS "area.name"
+	</sql>
+	
+	<sql id="bmQyGxJoins">
+		LEFT JOIN sys_office o4 ON o4.id = a.bm_id
+		LEFT JOIN sys_area a5 ON a5.id = a.qy_id
+	</sql>
+    
+	<select id="get" resultType="BmQyGx">
+		SELECT 
+			<include refid="bmQyGxColumns"/>
+		FROM bm_qy_gx a
+		<include refid="bmQyGxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findListByYear" resultType="BmQyGx">
+		SELECT 
+			<include refid="bmQyGxColumns"/>
+		FROM bm_qy_gx a
+		<include refid="bmQyGxJoins"/>
+		<where>
+		   a.nf = #{nf} and 
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+	</select>
+	
+	<select id="findList" resultType="BmQyGx">
+		SELECT 
+			<include refid="bmQyGxColumns"/>
+		FROM bm_qy_gx a
+		<include refid="bmQyGxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BmQyGx">
+		SELECT 
+			<include refid="bmQyGxColumns"/>
+		FROM bm_qy_gx a
+		<include refid="bmQyGxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bm_qy_gx(
+			id,
+			nf,
+			xq_id,
+			bm_id,
+			qy_id,
+			sysl,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{nf},
+			#{xqId},
+			#{office.id},
+			#{area.id},
+			#{sysl},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bm_qy_gx SET 	
+			nf = #{nf},
+			xq_id = #{xqId},
+			bm_id = #{office.id},
+			qy_id = #{area.id},
+			sysl = #{sysl},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bm_qy_gx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

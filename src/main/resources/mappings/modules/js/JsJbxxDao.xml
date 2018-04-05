@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.js.dao.JsJbxxDao">
+    
+	<sql id="jsJbxxColumns">
+		a.id AS "id",
+		a.xxdm AS "xxdm",
+		a.xm AS "xm",
+		a.gh AS "gh",
+		a.xbm AS "xbm",
+		a.csrq AS "csrq",
+		a.lxdh AS "lxdh",
+		a.ywxm AS "ywxm",
+		a.xmpy AS "xmpy",
+		a.jtzz AS "jtzz",
+		a.sfzjh AS "sfzjh",
+		a.cym AS "cym",
+		a.mzm AS "mzm",
+		a.jg AS "jg",
+		a.xlm AS "xlm",
+		a.csdm AS "csdm.id",
+		a.hyzkm AS "hyzkm",
+		a.zzmmm AS "zzmmm",
+		a.gzny AS "gzny",
+		a.gjdqm AS "gjdqm",
+		a.sfzjlxm AS "sfzjlxm",
+		a.lxny AS "lxny",
+		a.cjny AS "cjny",
+		a.xxm AS "xxm",
+		a.jkzkm AS "jkzkm",
+		a.gatqwm AS "gatqwm",
+		a.xyzjm AS "xyzjm",
+		a.dzxx AS "dzxx",
+		a.create_by AS "createBy.id",
+		a.yzbm AS "yzbm",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.zydz AS "zydz",
+		a.remarks AS "remarks",
+		a.tc AS "tc",
+		a.gwzym AS "gwzym",
+		a.del_flag AS "delFlag",
+		a.zyrkxd AS "zyrkxd",
+		a.bzlbm AS "bzlbm",
+		a.dabh AS "dabh",
+		a.dawb AS "dawb",
+		a.txdz AS "txdz",
+		a.sfzjyxq AS "sfzjyxq",
+		a.jgh AS "jgh.id",
+		a.xzz AS "xzz",
+		a.hkszd AS "hkszd",
+		a.hkxzm AS "hkxzm",
+		o45.name AS "jgh.name",
+		a16.name AS "csdm.name"
+	</sql>
+	
+	<sql id="jsJbxxJoins">
+		LEFT JOIN sys_area a16 ON a16.id = a.csdm
+		LEFT JOIN sys_office o45 ON o45.id = a.jgh
+	</sql>
+    
+	<select id="get" resultType="JsJbxx">
+		SELECT 
+			<include refid="jsJbxxColumns"/>
+		FROM js_jbxx a
+		<include refid="jsJbxxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JsJbxx">
+		SELECT 
+			<include refid="jsJbxxColumns"/>
+		FROM js_jbxx a
+		<include refid="jsJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="xm != null and xm != ''">
+				AND a.xm LIKE 
+					<if test="dbName == 'oracle'">'%'||#{xm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xm},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JsJbxx">
+		SELECT 
+			<include refid="jsJbxxColumns"/>
+		FROM js_jbxx a
+		<include refid="jsJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findJsxxList" resultType="JsJbxx">
+		SELECT 
+			<include refid="jsJbxxColumns"/>
+		FROM js_jbxx a
+		<include refid="jsJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.GH = #{gh}
+			<if test="id != null and id != ''">
+			  and a.ID != #{id}
+			</if>
+		</where>		
+		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO js_jbxx(
+			id,
+			xxdm,
+			xm,
+			gh,
+			xbm,
+			csrq,
+			lxdh,
+			ywxm,
+			xmpy,
+			jtzz,
+			sfzjh,
+			cym,
+			mzm,
+			jg,
+			xlm,
+			csdm,
+			hyzkm,
+			zzmmm,
+			gzny,
+			gjdqm,
+			sfzjlxm,
+			lxny,
+			cjny,
+			xxm,
+			jkzkm,
+			gatqwm,
+			xyzjm,
+			dzxx,
+			create_by,
+			yzbm,
+			create_date,
+			update_by,
+			update_date,
+			zydz,
+			remarks,
+			tc,
+			gwzym,
+			del_flag,
+			zyrkxd,
+			bzlbm,
+			dabh,
+			dawb,
+			txdz,
+			sfzjyxq,
+			jgh,
+			xzz,
+			hkszd,
+			hkxzm
+		) VALUES (
+			#{id},
+			#{xxdm},
+			#{xm},
+			#{gh},
+			#{xbm},
+			#{csrq},
+			#{lxdh},
+			#{ywxm},
+			#{xmpy},
+			#{jtzz},
+			#{sfzjh},
+			#{cym},
+			#{mzm},
+			#{jg},
+			#{xlm},
+			#{csdm.id},
+			#{hyzkm},
+			#{zzmmm},
+			#{gzny},
+			#{gjdqm},
+			#{sfzjlxm},
+			#{lxny},
+			#{cjny},
+			#{xxm},
+			#{jkzkm},
+			#{gatqwm},
+			#{xyzjm},
+			#{dzxx},
+			#{createBy.id},
+			#{yzbm},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{zydz},
+			#{remarks},
+			#{tc},
+			#{gwzym},
+			#{delFlag},
+			#{zyrkxd},
+			#{bzlbm},
+			#{dabh},
+			#{dawb},
+			#{txdz},
+			#{sfzjyxq},
+			#{jgh.id},
+			#{xzz},
+			#{hkszd},
+			#{hkxzm}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE js_jbxx SET 	
+			xxdm = #{xxdm},
+			xm = #{xm},
+			gh = #{gh},
+			xbm = #{xbm},
+			csrq = #{csrq},
+			lxdh = #{lxdh},
+			ywxm = #{ywxm},
+			xmpy = #{xmpy},
+			jtzz = #{jtzz},
+			sfzjh = #{sfzjh},
+			cym = #{cym},
+			mzm = #{mzm},
+			jg = #{jg},
+			xlm = #{xlm},
+			csdm = #{csdm.id},
+			hyzkm = #{hyzkm},
+			zzmmm = #{zzmmm},
+			gzny = #{gzny},
+			gjdqm = #{gjdqm},
+			sfzjlxm = #{sfzjlxm},
+			lxny = #{lxny},
+			cjny = #{cjny},
+			xxm = #{xxm},
+			jkzkm = #{jkzkm},
+			gatqwm = #{gatqwm},
+			xyzjm = #{xyzjm},
+			dzxx = #{dzxx},
+			yzbm = #{yzbm},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			zydz = #{zydz},
+			remarks = #{remarks},
+			tc = #{tc},
+			gwzym = #{gwzym},
+			zyrkxd = #{zyrkxd},
+			bzlbm = #{bzlbm},
+			dabh = #{dabh},
+			dawb = #{dawb},
+			txdz = #{txdz},
+			sfzjyxq = #{sfzjyxq},
+			jgh = #{jgh.id},
+			xzz = #{xzz},
+			hkszd = #{hkszd},
+			hkxzm = #{hkxzm}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE js_jbxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据用户获取教师信息 -->
+	<!-- <select id="getJsByUser" resultType="JsJbxx">
+	
+	SELECT * FROM js_jbxx WHERE gh = (SELECT login_name FROM sys_user WHERE id = #{userid})
+	
+	</select>
+	 -->
+</mapper>

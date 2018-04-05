@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.zsjh.dao.ZsjhDao">
+    
+	<sql id="zsjhColumns">
+		a.id AS "id",
+		a.jhmc AS "jhmc",
+		xnxq.xnmc AS "nf.xnmc",
+		xnxq.id AS "nf.id",
+		a.xq_id AS "xqId",
+		a.zsrs AS "zsrs",
+		a.surplus AS "surplus",
+		a.spnr AS "spnr",
+		a.proc_ins_id AS "procInsId",
+		a.jhsm AS "jhsm",
+		a.zt AS "zt",
+		a.create_by AS "createBy.id",
+		(SELECT NAME FROM sys_user WHERE id = a.create_by) as "createBy.name",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.bcStatus as "bcStatus",
+		a.approve_by AS "approveBy.id",
+		a.approve_date AS "approveDate",
+		a.startDate AS "startDate",
+		a.endDate AS "endDate",
+		a.zsnd AS "zsnd",
+		sy.label as 'nf.xq',
+		su.name AS "approveBy.name"
+	</sql>
+	
+	<sql id="zsjhJoins">
+	  LEFT JOIN sys_user su on su.id = a.approve_by
+	  left join xnxq_jbxx xnxq on xnxq.id = a.nf
+	  left join sys_dict sy on sy.value = xnxq.xq
+			and sy.type='term_type' and sy.del_flag='0'
+	</sql>
+    
+	<select id="get" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		WHERE a.id = #{id}
+	</select>
+		<select id="findZsjhByPnsId" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		WHERE a.proc_ins_id = #{procInsId}
+	</select>
+	
+	<select id="findList" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="dqdlr != null and dqdlr != ''">
+				AND a.create_by = #{dqdlr}
+			</if>
+			<if test="used != null and used != ''">
+				AND a.used = #{used}
+			</if>
+			<if test="jhmc != null and jhmc != ''">
+				AND a.jhmc like CONCAT(CONCAT('%', #{jhmc}), '%')
+			</if>
+			<if test="xqId != null and xqId != ''">
+				AND a.xq_id = #{xqId}
+			</if>
+			<if test="nf != null and nf != ''">
+				<if test="nf.id !=null and nf.id !=''">
+					AND a.nf = #{nf.id}
+				</if>
+			</if>
+			<if test="zt != null and zt != ''">
+				AND a.zt = #{zt}
+			</if>
+			
+			<if test="startDate != null and startDate != ''">
+				AND DATE(a.startDate) >= DATE(#{startDate})
+			</if>
+			<if test="endDate != null and endDate != ''">
+				<![CDATA[
+				     AND DATE(a.endDate) <= DATE(#{endDate})
+				]]>
+			</if>
+			<if test="zsnd != null and zsnd != ''">
+				AND a.zsnd = #{zsnd}
+			</if>
+			<if test="createBy != null">
+				AND a.create_by = #{createBy.id}
+			</if>
+			
+			<!-- <if test="createDate != null and createDate != ''">
+				AND DATE(a.create_date) = #{createDate}
+			</if>
+			<if test="createBy != null">
+				AND a.create_by = #{createBy.id}
+			</if> -->
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllListZsjh" resultType="Zsjh" >
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		 where a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.jhmc = #{jhmc}
+			
+			<if test="id !=null and id !=''">
+				and a.id != #{id}
+			</if>
+	
+	</select>
+	
+	
+	
+	<select id="findAllList" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<select id="findAllListByCreateDate" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListByUsed" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.used = 0
+		</where>	
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListZsjh" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.used = 0
+			AND zt ='3'
+			<!-- AND DATE(endDate) >=DATE(NOW()) -->
+		</where>	
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	
+	
+	<select id="findListByUserId" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="createBy != null">
+				and a.create_by =#{createBy.id}
+			</if>
+		</where>	
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findZsjhListByUserId" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND zt ='3'
+			AND endDate >= NOW()
+			<if test="createBy != null">
+			and a.create_by =#{createBy.id}
+			</if>
+		</where>	
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findUseZsjh" resultType="Zsjh">
+		SELECT * FROM zsjh WHERE used = 0 and zt=3 and del_flag=0 ORDER BY create_date DESC LIMIT 0,1
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO zsjh(
+			id,
+			jhmc,
+			nf,
+			xq_id,
+			zsrs,
+			surplus,
+			spnr,
+			proc_ins_id,
+			jhsm,
+			zt,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			bcStatus,
+			approve_by,
+			startDate,
+			endDate,
+			zsnd,
+			approve_date
+		) VALUES (
+			#{id},
+			#{jhmc},
+			#{nf.id},
+			#{xqId},
+			#{zsrs},
+			#{surplus},
+			#{spnr},
+			#{procInsId},
+			#{jhsm},
+			#{zt},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{bcStatus},
+			#{approveBy.id},
+			#{startDate},
+			#{endDate},
+			#{zsnd},
+			#{approveDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE zsjh SET 	
+			jhmc = #{jhmc},
+			nf = #{nf.id},
+			xq_id = #{xqId},
+			zsrs = #{zsrs},
+			surplus = #{surplus},
+			spnr = #{spnr},
+			jhsm = #{jhsm},
+			zt = #{zt},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			bcStatus=#{bcStatus},
+			approve_by= #{approveBy.id},
+			startDate = #{startDate},
+			endDate = #{endDate},
+			zsnd = #{zsnd},
+			approve_date = #{approveDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateUsed">
+		UPDATE zsjh SET
+			used=#{used}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE zsjh SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getZsjhList" resultType="Zsjh">
+		SELECT 
+			<include refid="zsjhColumns"/>
+		FROM zsjh a
+		<include refid="zsjhJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		and a.zt !='0'
+		<if test="id !=null and id !=''">
+				and a.nf = #{id}
+		</if>
+	</select>
+	
+	<select id="getTeacherNum" parameterType="String" resultType="int">
+		SELECT COUNT(*) 
+		FROM (
+		   SELECT * FROM jh_fj_gr 
+		   WHERE jh_id =#{jhid}   
+		   and bcStatus='1'
+		   GROUP BY js_id
+		) d;
+	</select>	
+
+	<select id="statAll" parameterType="String" resultType="Map">
+	<!-- 计划总任务数 -->
+		SELECT '招生总任务数' AS proName,SUM(ifnull(jh.ZSRS,0)) AS bdNum FROM zsjh jh WHERE jh.del_flag='0' 
+			AND jh.zt='3' 
+			AND jh.id IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) 
+		UNION ALL
+		<!-- 
+			招生总登记数
+		-->
+		SELECT '招生总登记数' AS proName,COUNT(1) AS bdNum FROM zsdj dj 
+			WHERE dj.del_flag='0' 
+			AND dj.jh_id IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) 
+		UNION ALL
+		<!-- 招生总完成数 -->
+		SELECT '招生总完成数' AS proName,COUNT(1) AS bdNum FROM bd_jbxx bd 
+			WHERE bd.del_flag='0' AND bd.jfzt='1'
+			AND bd.jh_id IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) 
+	</select>
+	<select id="statBMAll" parameterType="String" resultType="Map">
+	SELECT
+	'学校部门招生' AS proName,
+	IFNULL((SELECT SUM(grjh.zsrs) FROM jh_fj_gr grjh
+	 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+	 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND gr.del_flag='0' AND bm.del_flag='0' AND bm.type='2'
+	 GROUP BY bm.type),0) AS jhNum,
+	(SELECT COUNT(1) FROM zsdj dj4 WHERE dj4.del_flag='0' AND dj4.ly='1'
+	 AND dj4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS djNum,
+	(SELECT COUNT(1) FROM bd_jbxx bd4 WHERE bd4.del_flag='0' AND bd4.ly='1' AND bd4.jfzt='1'
+	 AND bd4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS wcNum
+	UNION ALL 
+	SELECT 
+	'招生代理机构招生' AS proName,
+	IFNULL((SELECT SUM(grjh.zsrs) FROM jh_fj_gr grjh
+	 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+	 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND gr.del_flag='0' AND bm.del_flag='0' AND bm.type='4'
+	 GROUP BY bm.type),0) AS jhNum,
+	(SELECT COUNT(1) FROM zsdj dj4 WHERE dj4.del_flag='0' AND dj4.ly='4'
+	 AND dj4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS djNum,
+	(SELECT COUNT(1) FROM bd_jbxx bd4 WHERE bd4.del_flag='0' AND bd4.ly='4' AND bd4.jfzt='1'
+	 AND bd4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS wcNum
+	UNION ALL
+	SELECT
+	'网上招生' AS proName,
+	0 AS jhNum,
+	(SELECT COUNT(1) FROM zsdj dj4 WHERE dj4.del_flag='0' AND dj4.ly='2'
+	 AND dj4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS djNum,
+	(SELECT COUNT(1) FROM bd_jbxx bd4 WHERE bd4.del_flag='0' AND bd4.ly='2' AND bd4.jfzt='1'
+	 AND bd4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS wcNum
+	UNION ALL
+	SELECT
+	'学校招生' AS proName,
+	0 AS jhNum,
+	(SELECT COUNT(1) FROM zsdj dj4 WHERE dj4.del_flag='0' AND dj4.ly='3'
+	 AND dj4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS djNum,
+	(SELECT COUNT(1) FROM bd_jbxx bd4 WHERE bd4.del_flag='0' AND bd4.ly='3' AND bd4.jfzt='1'
+	 AND bd4.JH_ID IN (SELECT id FROM zsjh ndjh WHERE ndjh.zsnd=#{zsnd}) ) AS wcNum
+	</select>
+	<select id="statRYPart" parameterType="String" resultType="Map">
+	SELECT allUser.id AS ryId,allUser.name AS ryName,IFNULL(rws.ryJhrs,0) AS ryJhrs,IFNULL(djs.ryDjrs,0) AS ryDjrs,IFNULL(wcs.ryWcrs,0) AS ryWcrs, bm.id AS bmId,bm.name AS bmName 
+	 FROM sys_user allUser
+	 LEFT JOIN sys_office bm ON allUser.office_id=bm.id
+	 LEFT JOIN 
+	(SELECT grjh.js_id AS ryId,gr.name AS ryName,SUM(grjh.zsrs) AS ryJhrs, bm.id AS bmid,bm.name AS bmName FROM jh_fj_gr grjh
+	 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+	 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND gr.del_flag='0'
+	 GROUP BY grjh.js_id) rws ON allUser.id=rws.ryId
+	LEFT JOIN
+	(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryDjrs, bm.id AS bmid,bm.name AS bmName FROM zsdj dj
+	 LEFT JOIN sys_user gr ON dj.js_id=gr.id
+	 LEFT JOIN zsjh jh ON dj.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND dj.LY IN ('1','4') AND gr.del_flag='0'
+	GROUP BY gr.id) djs ON allUser.id=djs.ryid
+	LEFT JOIN 
+	(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryWcrs, bm.id AS bmid,bm.name AS bmName FROM bd_jbxx bd
+	 LEFT JOIN sys_user gr ON bd.js_id=gr.id
+	 LEFT JOIN zsjh jh ON bd.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND bd.LY IN ('1','4') AND gr.del_flag='0' AND bd.jfzt='1'
+	GROUP BY gr.id) wcs ON allUser.id=wcs.ryid
+	WHERE allUser.del_flag='0' AND bm.del_flag='0' AND rws.ryJhrs<![CDATA[<>]]>0
+	</select>
+	<select id="statBMPart" parameterType="String" resultType="Map">
+	SELECT grwcqk.bmid AS bmId,grwcqk.bmName AS bmName,SUM(grwcqk.ryJhrs) AS bmRws,SUM(grwcqk.ryDjrs) AS bmDjs,SUM(grwcqk.ryWcrs) AS bmWcs,grwcqk.bmType AS bmType
+	FROM
+	(SELECT allUser.id AS ryId,allUser.name AS ryName,IFNULL(rws.ryJhrs,0) AS ryJhrs,IFNULL(djs.ryDjrs,0) AS ryDjrs,IFNULL(wcs.ryWcrs,0) AS ryWcrs, bm.id AS bmid,bm.name AS bmName,bm.type AS bmType 
+	 FROM sys_user allUser
+	 LEFT JOIN sys_office bm ON allUser.office_id=bm.id
+	 LEFT JOIN 
+	(SELECT grjh.js_id AS ryId,gr.name AS ryName,SUM(grjh.zsrs) AS ryJhrs, bm.id AS bmid,bm.name AS bmName FROM jh_fj_gr grjh
+	 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+	 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND gr.del_flag='0' AND bm.del_flag='0' 
+	 GROUP BY grjh.js_id) rws ON allUser.id=rws.ryId
+	LEFT JOIN
+	(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryDjrs, bm.id AS bmid,bm.name AS bmName FROM zsdj dj
+	 LEFT JOIN sys_user gr ON dj.js_id=gr.id
+	 LEFT JOIN zsjh jh ON dj.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND dj.LY IN ('1','4') AND gr.del_flag='0' AND bm.del_flag='0' 
+	GROUP BY gr.id) djs ON allUser.id=djs.ryid
+	LEFT JOIN 
+	(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryWcrs, bm.id AS bmid,bm.name AS bmName FROM bd_jbxx bd
+	 LEFT JOIN sys_user gr ON bd.js_id=gr.id
+	 LEFT JOIN zsjh jh ON bd.jh_id=jh.id
+	 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+	WHERE jh.zsnd=#{zsnd} AND bd.LY IN ('1','4') AND gr.del_flag='0' AND bm.del_flag='0' AND bd.jfzt='1'
+	GROUP BY gr.id) wcs ON allUser.id=wcs.ryid
+	WHERE allUser.del_flag='0' AND bm.del_flag='0' AND rws.ryJhrs<![CDATA[<>]]>0) grwcqk
+	GROUP BY grwcqk.bmid
+	ORDER BY grwcqk.bmType
+	</select>
+	<select id="findAllZsnd" parameterType="String" resultType="Map">
+		SELECT DISTINCT zsnd FROM zsjh where del_flag='0' 
+			AND zt='3' ORDER BY zsnd DESC
+	</select>
+	<resultMap type="com.thinkgem.jeesite.modules.statistics.entity.Statistics" id="StatisticsGR">
+		<result property="ranking" column="ranking"/>
+		<result property="id" column="ryId"/>
+		<result property="name" column="ryName"/>
+		<result property="num1" column="ryJhrs"/>
+		<result property="num2" column="ryDjrs"/>
+		<result property="num3" column="ryWcrs"/>
+		<result property="num4" column="wcPercent"/>
+		<result property="id2" column="bmId"/>
+		<result property="name2" column="bmName"/>
+	</resultMap>
+	<select id="paiHangGRByZsjhAndBm" parameterType="String" resultMap="StatisticsGR">
+		SELECT resultSort.ROWNUM AS ranking,ry.ryId AS ryId,ry.ryName AS ryName,ry.ryJhrs AS ryJhrs,ry.ryDjrs AS ryDjrs,ry.ryWcrs AS ryWcrs,ry.wcPercent AS wcPercent, ry.bmId AS bmId,ry.bmName AS bmName
+		FROM
+		(SELECT allUser.id AS ryId,allUser.name AS ryName,IFNULL(rws.ryJhrs,0) AS ryJhrs,IFNULL(djs.ryDjrs,0) AS ryDjrs,IFNULL(wcs.ryWcrs,0) AS ryWcrs,concat(round((IFNULL((ryWcrs*1.0/ryJhrs),0)*100),2),'%') AS wcPercent, bm.id AS bmId,bm.name AS bmName 
+		 FROM sys_user allUser 
+		 LEFT JOIN sys_office bm ON allUser.office_id=bm.id
+		 LEFT JOIN 
+		(SELECT grjh.js_id AS ryId,gr.name AS ryName,SUM(grjh.zsrs) AS ryJhrs, bm.id AS bmid,bm.name AS bmName FROM jh_fj_gr grjh
+		 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+		 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		 GROUP BY grjh.js_id) rws ON allUser.id=rws.ryId
+		LEFT JOIN
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryDjrs, bm.id AS bmid,bm.name AS bmName FROM zsdj dj
+		 LEFT JOIN sys_user gr ON dj.js_id=gr.id
+		 LEFT JOIN zsjh jh ON dj.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		GROUP BY gr.id) djs ON allUser.id=djs.ryid
+		LEFT JOIN 
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryWcrs, bm.id AS bmid,bm.name AS bmName FROM bd_jbxx bd
+		 LEFT JOIN sys_user gr ON bd.js_id=gr.id
+		 LEFT JOIN zsjh jh ON bd.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' AND bd.jfzt='1'
+		GROUP BY gr.id) wcs ON allUser.id=wcs.ryid
+		WHERE allUser.del_flag='0' AND bm.del_flag='0' AND rws.ryJhrs<![CDATA[<>]]>0
+		<if test="bmid !=null and bmid !=''">
+				AND bm.id=#{bmid}
+		</if>
+		ORDER BY ROUND((IFNULL((ryWcrs*1.0/ryJhrs),0)*100),2) DESC,ryJhrs DESC,ryDjrs DESC) ry
+		LEFT JOIN 
+		(SELECT (@rowNO := @rowNo+1) AS ROWNUM,resultNum.ryJhrs AS rws,resultNum.ryDjrs AS djs,resultNum.ryWcrs AS wcs,resultNum.wcPercent AS percent 
+		 FROM
+		(SELECT DISTINCT IFNULL(rws.ryJhrs,0) AS ryJhrs,IFNULL(djs.ryDjrs,0) AS ryDjrs,IFNULL(wcs.ryWcrs,0) AS ryWcrs,concat(round((IFNULL((ryWcrs*1.0/ryJhrs),0)*100),2),'%') AS wcPercent
+		 FROM sys_user allUser 
+		 LEFT JOIN sys_office bm ON allUser.office_id=bm.id
+		 LEFT JOIN 
+		(SELECT grjh.js_id AS ryId,gr.name AS ryName,SUM(grjh.zsrs) AS ryJhrs, bm.id AS bmid,bm.name AS bmName FROM jh_fj_gr grjh
+		 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+		 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		 GROUP BY grjh.js_id) rws ON allUser.id=rws.ryId
+		LEFT JOIN
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryDjrs, bm.id AS bmid,bm.name AS bmName FROM zsdj dj
+		 LEFT JOIN sys_user gr ON dj.js_id=gr.id
+		 LEFT JOIN zsjh jh ON dj.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		GROUP BY gr.id) djs ON allUser.id=djs.ryid
+		LEFT JOIN 
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryWcrs, bm.id AS bmid,bm.name AS bmName FROM bd_jbxx bd
+		 LEFT JOIN sys_user gr ON bd.js_id=gr.id
+		 LEFT JOIN zsjh jh ON bd.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' AND bd.jfzt='1'
+		GROUP BY gr.id) wcs ON allUser.id=wcs.ryid
+		WHERE allUser.del_flag='0' AND bm.del_flag='0' AND rws.ryJhrs<![CDATA[<>]]>0
+		<if test="bmid !=null and bmid !=''">
+				AND bm.id=#{bmid}
+		</if>
+		ORDER BY round((IFNULL((ryWcrs*1.0/ryJhrs),0)*100),2) DESC,ryJhrs DESC,ryDjrs DESC) resultNum
+		,(select @rowNO :=0) b) resultSort ON ry.ryJhrs=resultSort.rws AND ry.ryDjrs=resultSort.djs AND ry.ryWcrs=resultSort.wcs AND ry.wcPercent=resultSort.percent
+	</select>
+	<resultMap type="com.thinkgem.jeesite.modules.statistics.entity.Statistics" id="StatisticsBM">
+		<result property="ranking" column="ranking"/>
+		<result property="id" column="bmId"/>
+		<result property="name" column="bmName"/>
+		<result property="num1" column="bmRws"/>
+		<result property="num2" column="bmDjs"/>
+		<result property="num3" column="bmWcs"/>
+		<result property="num4" column="wcPercent"/>
+	</resultMap>
+	<select id="paiHangBMByZsjh" parameterType="String" resultMap="StatisticsBM">
+		SELECT resultSort.ROWNUM AS ranking,bm.bmId AS bmId,bm.bmName AS bmName,bm.bmRws AS bmRws,bm.bmDjs AS bmDjs,bm.bmWcs AS bmWcs,bm.wcPercent AS wcPercent
+		FROM
+		(SELECT grwcqk.bmid AS bmId,grwcqk.bmName AS bmName,SUM(grwcqk.ryJhrs) AS bmRws,SUM(grwcqk.ryDjrs) AS bmDjs,SUM(grwcqk.ryWcrs) AS bmWcs,concat(round((IFNULL((SUM(grwcqk.ryWcrs)*1.0/SUM(grwcqk.ryJhrs)),0)*100),2),'%') AS wcPercent
+		FROM
+		(SELECT allUser.id AS ryId,allUser.name AS ryName,IFNULL(rws.ryJhrs,0) AS ryJhrs,IFNULL(djs.ryDjrs,0) AS ryDjrs,IFNULL(wcs.ryWcrs,0) AS ryWcrs, bm.id AS bmid,bm.name AS bmName,bm.type AS bmType 
+		 FROM sys_user allUser
+		 LEFT JOIN sys_office bm ON allUser.office_id=bm.id
+		 LEFT JOIN 
+		(SELECT grjh.js_id AS ryId,gr.name AS ryName,SUM(grjh.zsrs) AS ryJhrs, bm.id AS bmid,bm.name AS bmName FROM jh_fj_gr grjh
+		 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+		 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		 GROUP BY grjh.js_id) rws ON allUser.id=rws.ryId
+		LEFT JOIN
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryDjrs, bm.id AS bmid,bm.name AS bmName FROM zsdj dj
+		 LEFT JOIN sys_user gr ON dj.js_id=gr.id
+		 LEFT JOIN zsjh jh ON dj.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		GROUP BY gr.id) djs ON allUser.id=djs.ryid
+		LEFT JOIN 
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryWcrs, bm.id AS bmid,bm.name AS bmName FROM bd_jbxx bd
+		 LEFT JOIN sys_user gr ON bd.js_id=gr.id
+		 LEFT JOIN zsjh jh ON bd.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' AND bd.jfzt='1'
+		GROUP BY gr.id) wcs ON allUser.id=wcs.ryid
+		WHERE allUser.del_flag='0' AND bm.del_flag='0' AND rws.ryJhrs<![CDATA[<>]]>0) grwcqk
+		GROUP BY grwcqk.bmid
+		ORDER BY round((IFNULL((SUM(grwcqk.ryWcrs)*1.0/SUM(grwcqk.ryJhrs)),0)*100),2) DESC,bmRws DESC,bmDjs DESC) bm
+		LEFT JOIN
+		(SELECT (@rowNO := @rowNo+1) AS ROWNUM,resultNum.bmRws AS rws,resultNum.bmDjs AS djs,resultNum.bmWcs AS wcs,resultNum.wcPercent AS percent 
+		 FROM
+		(SELECT DISTINCT SUM(grwcqk.ryJhrs) AS bmRws,SUM(grwcqk.ryDjrs) AS bmDjs,SUM(grwcqk.ryWcrs) AS bmWcs,concat(round((IFNULL((SUM(grwcqk.ryWcrs)*1.0/SUM(grwcqk.ryJhrs)),0)*100),2),'%') AS wcPercent
+		FROM
+		(SELECT allUser.id AS ryId,allUser.name AS ryName,IFNULL(rws.ryJhrs,0) AS ryJhrs,IFNULL(djs.ryDjrs,0) AS ryDjrs,IFNULL(wcs.ryWcrs,0) AS ryWcrs, bm.id AS bmid,bm.name AS bmName,bm.type AS bmType 
+		 FROM sys_user allUser
+		 LEFT JOIN sys_office bm ON allUser.office_id=bm.id
+		 LEFT JOIN 
+		(SELECT grjh.js_id AS ryId,gr.name AS ryName,SUM(grjh.zsrs) AS ryJhrs, bm.id AS bmid,bm.name AS bmName FROM jh_fj_gr grjh
+		 LEFT JOIN sys_user gr ON grjh.js_id=gr.id
+		 LEFT JOIN zsjh jh ON grjh.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		 GROUP BY grjh.js_id) rws ON allUser.id=rws.ryId
+		LEFT JOIN
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryDjrs, bm.id AS bmid,bm.name AS bmName FROM zsdj dj
+		 LEFT JOIN sys_user gr ON dj.js_id=gr.id
+		 LEFT JOIN zsjh jh ON dj.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' 
+		GROUP BY gr.id) djs ON allUser.id=djs.ryid
+		LEFT JOIN 
+		(SELECT gr.id AS ryId,gr.name AS ryName,COUNT(*) AS ryWcrs, bm.id AS bmid,bm.name AS bmName FROM bd_jbxx bd
+		 LEFT JOIN sys_user gr ON bd.js_id=gr.id
+		 LEFT JOIN zsjh jh ON bd.jh_id=jh.id
+		 LEFT JOIN sys_office bm ON gr.office_id=bm.id
+		WHERE jh.id=#{jhid} AND gr.del_flag='0' AND bm.del_flag='0' AND bd.jfzt='1'
+		GROUP BY gr.id) wcs ON allUser.id=wcs.ryid
+		WHERE allUser.del_flag='0' AND bm.del_flag='0' AND rws.ryJhrs<![CDATA[<>]]>0) grwcqk
+		GROUP BY grwcqk.bmid
+		ORDER BY round((IFNULL((SUM(grwcqk.ryWcrs)*1.0/SUM(grwcqk.ryJhrs)),0)*100),2) DESC,bmRws DESC,bmDjs DESC) resultNum
+		,(select @rowNO :=0) b) resultSort ON bm.bmRws=resultSort.rws AND bm.bmDjs=resultSort.djs AND bm.bmWcs=resultSort.wcs AND bm.wcPercent=resultSort.percent
+	</select>
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jxdg.dao.JxDgDao">
+    
+	<sql id="jxDgColumns">
+	    @rownum:=@rownum+1 AS "xuhao",
+		a.id AS "id",
+		a.jh_id AS "jhId",
+		a.xnxq AS "xnxq",
+		a.zy_id AS "zyId",
+		a.kc_id AS "kcId",
+		(SELECT  b.courseName  FROM course b WHERE b.id=a.kc_id) AS "kcmc",
+		a.kcxzid AS "kcxzid",
+		a.skjs  AS "skjs",
+		a.zxs_count AS "zxsCount",
+		a.jk_count AS "jkCount",
+		a.sj_count AS "sjCount",
+		a.kwsj_count AS "kwsjCount",
+		a.shcc_id AS "shccId",
+		a.kkxq AS "kkxq",
+		a.kcmdrw AS "kcmdrw",
+		a.lljyyq AS "lljyyq",
+		a.kcxgsm AS "kcxgsm",
+		a.jxjy AS "jxjy",
+		a.zt AS "zt",
+		a.create_by AS "createBy.id",
+		(SELECT NAME FROM sys_user WHERE id = a.create_by) as "createBy.name",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jxDgJoins">
+	</sql>
+    
+	<select id="get" resultType="JxDg">
+		SELECT 
+			<include refid="jxDgColumns"/>
+		FROM jx_dg a
+		<include refid="jxDgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JxDg">
+		SELECT 
+			<include refid="jxDgColumns"/>
+		FROM (SELECT @rownum:=0) r,jx_dg a
+		<include refid="jxDgJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="xnxq != null and xnxq != ''">
+			and a.xnxq=#{xnxq}
+			</if>
+			<if test="kcId != null and kcId != ''">
+			and a.kc_id=#{kcId}
+			</if>
+			<if test="shccId != null and shccId != ''">
+			and a.shcc_id=#{shccId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JxDg">
+		SELECT 
+			<include refid="jxDgColumns"/>
+		FROM (SELECT @rownum:=0) r,jx_dg a
+		<include refid="jxDgJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select  id="fingZyByCourseId"  parameterType="String" resultType="Map">
+	       SELECT b.zymc  FROM coursezy a 
+            LEFT JOIN zy_jbxx b
+            ON a.zyid=b.id
+            WHERE a.courseid=#{id}
+	</select>
+	
+	<select  id="findjxdgByCourseXnxq"  resultType="JxDg">
+	    SELECT 
+			<include refid="jxDgColumns"/>
+		FROM (SELECT @rownum:=0) r,jx_dg a
+		<include refid="jxDgJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.kc_id=#{kcId}
+			and a.xnxq=#{xnxq}
+		</where>		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jx_dg(
+			id,
+			jh_id,
+			xnxq,
+			zy_id,
+			kc_id,
+			kcxzid,
+			skjs,
+			zxs_count,
+			jk_count,
+			sj_count,
+			kwsj_count,
+			shcc_id,
+			kkxq,
+			kcmdrw,
+			lljyyq,
+			kcxgsm,
+			jxjy,
+			zt,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{jhId},
+			#{xnxq},
+			#{zyId},
+			#{kcId},
+			#{kcxzid},
+			#{skjs},
+			#{zxsCount},
+			#{jkCount},
+			#{sjCount},
+			#{kwsjCount},
+			#{shccId},
+			#{kkxq},
+			#{kcmdrw},
+			#{lljyyq},
+			#{kcxgsm},
+			#{jxjy},
+			#{zt},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jx_dg SET 	
+			jh_id = #{jhId},
+			xnxq=#{xnxq},
+			zy_id = #{zyId},
+			kc_id = #{kcId},
+			kcxzid = #{kcxzid},
+			skjs = #{skjs},
+			zxs_count = #{zxsCount},
+			jk_count = #{jkCount},
+			sj_count = #{sjCount},
+			kwsj_count = #{kwsjCount},
+			shcc_id = #{shccId},
+			kkxq = #{kkxq},
+			kcmdrw = #{kcmdrw},
+			lljyyq = #{lljyyq},
+			kcxgsm = #{kcxgsm},
+			jxjy = #{jxjy},
+			zt = #{zt},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jx_dg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

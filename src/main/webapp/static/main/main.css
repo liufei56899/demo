@@ -1,0 +1,398 @@
+@CHARSET "UTF-8";
+/******全局样式*********/
+html {
+	width: 98%;
+	height: 85%;
+	margin: 0px;
+	padding: 0px;
+	
+	/* overflow: hidden; */
+}
+
+body {
+	width: 100%;
+	background-color:#efefef;
+	margin: 10px;
+	padding: 10px;
+	
+}
+
+#main {
+	width: 100%;
+	height: 750px;
+	margin: 0px;
+	padding: 0px;
+}
+
+/******内容上部分***********/
+#content_top {
+	width: 100%;
+	height: 240px;
+	margin-bottom: 20px;
+	padding: 0px;
+}
+#content_top>.title{
+	width: 33.3%;
+	
+}
+/*******通知公告*************/
+#content_top_tzgg,#content_top_grzstj,#content_top_zssk {
+	height: 100%;
+	margin-right: 20px;
+	background-color: #fff;
+}
+
+.tzgg_div,.grzs_div,.zsqk_div{
+	width: 33.3%;
+	float: left;
+	height: 200px;
+}
+.tzgg_div>.title,.grzs_div>.title,.zsqk_div>.title{
+	width: 96.7%;
+	background-color: #D31517;
+	/* border-radius:5px; */
+}
+.tzgg_div>.title>p,.grzs_div>.title>p,.zsqk_div>.title>p{
+	padding: 10px 0;
+	margin: 0 0 5px;
+	font-size: 16px;
+	font-weight: bold;
+	color:#fff;
+	text-indent: 20px;
+}
+
+#content_top_tzgg .title {
+	color: green;
+}
+#content_botton_zszytj .title{
+	font-size: 16px;
+	font-weight: bold;
+	margin: 5px 0;
+} 
+
+#content_top_tzgg .content {
+	height: 100px;
+}
+.highcharts-container>span{
+	     font-size: 16px !important;
+	     font-weight: bold;
+	     font-family: Microsoft Yahei !important;
+	    }
+/*******个人招生统计*************/
+
+#content_top_grzstj .title {
+	color: red;    
+}
+
+#content_top_grzstj .left {
+	
+	width: 25%;
+	float: left;
+}
+
+#content_top_grzstj .right_ {
+	width: 69.5%;
+	float: right;
+	height: 100%;
+	position: relative;
+}
+.right{
+	min-width: 1300px;
+}
+.right_cont>p{
+	border-bottom: 1px dashed #999;
+    height: 30px;
+    line-height: 30px;
+    width: 90%;
+    margin: 0 auto;
+    padding-left: 9%;
+}
+
+#zstjgr_info {
+	height: 100%;
+	width: 100%;
+}
+#zstjgr_info .info-img{
+	padding-left: 8%;
+}
+.info-img>img{
+	width: 90%;
+	margin-left: 6%;
+	
+
+}
+.right_cont{
+	width: 90%;
+}
+.right_cont>p{
+	font-size: 14px !important;
+	margin: 5px 0;
+}
+#localtime{
+	width: 200px;
+}
+.ls-img{
+	text-align: center;
+}
+.ls-img>img{
+	width: 140px;
+	height: 170px;
+}
+.ls-font{
+	text-align: center;
+	font-size: 12px !important;
+}
+.ls-font>p{
+	margin: 0;
+}
+.ls-zs{
+	top:200px !important;
+	
+}
+.ls-zs>p{
+	width: 33.3% !important;
+}
+.ls-zs>p>span{
+
+	margin: 0 3px;
+}
+/*******招生实况*************/
+
+#content_top_zssk .title {
+	color: graytext;
+}
+
+#content_top_zssk .content {
+	width: 100%;
+}
+
+#tableId{
+	height: 85%;
+	width: 100%;
+}
+
+
+
+/*******内容下部分***********/
+#content_botton {
+	width: 100%;
+	height:435px;
+	margin: 0px;
+	padding: 0px;
+	clear: both;
+	min-width:968px;
+}
+/*********招生专业统计********/
+#content_botton_zszytj {
+	width: 58%;
+	/* height: 392px; */
+	/* margin-bottom: 10px; */
+	padding:0 10px 20px 0px;
+	float: left;
+	
+}
+
+#content_botton_zszytj .title {
+	height:40px;
+	line-height:40px;
+	text-indent:20px;
+	width: 100%;
+	color: #fff;
+	background-color: #D31517;
+}
+
+#content_botton_zszytj_bm .title{
+	height:40px;
+	line-height:40px;
+	text-indent:20px;
+	width: 100%;
+	color: #fff;
+	background-color: #D31517;
+	font-size: 16px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+
+#content_botton_zszytj .content {
+	width: 100%;
+	height: 411px;
+	
+}
+#highcharts-2{
+	height: 412px !important;
+}
+
+/*********各部门招生统计********/
+#content_botton_zszytj_bm {
+	height: 89%;
+	margin-bottom: 10px;
+	padding:0px 10px 10px 10px;
+	float: left;
+}
+
+
+#content_botton_zszytj_bm #content_db {
+	width: 100%;
+	height: 49.5%;
+
+}
+
+#content_botton_zszytj_bm #content_bm {
+	width: 100%;
+	height: 45%;
+
+}
+
+/**********设置统计图信息****************/
+#content_botton_zszytj_bm .content_db {
+	width: 100%;
+	height: 100%;
+}
+
+#content_botton_zszytj_bm .content_bm {
+	width: 100%;
+	height: 100%;
+}
+
+
+/* ================================== */
+.t_title>dl
+{
+	padding: 0;
+	margin: 0;
+}
+
+.t_title>dl>dt{
+	float: left;
+	width: 25%;
+	text-align: center;
+	padding: 10px 0;
+}
+#marquee6{
+	clear: both;
+}
+/* ===================================== */
+.zs_div{
+	 width: 22%;
+    position: absolute;
+    right: 70px;
+    top: 170px;
+}
+.zs_div>p{
+	width: 30%;
+	float: left;
+	height: 66px;
+	
+}
+.zs_div>p.zsrw_{
+	background: url("../lg-images/1.png") no-repeat 48% 0px;
+}
+.zs_div>p.zswc_{
+	background: url("../lg-images/2.png") no-repeat 48% 0px;
+}
+.zs_div>p.syrw_{
+	background: url("../lg-images/3.png") no-repeat 48% 0px;
+}
+.zs_div>p>span{
+	display: block;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	margin-top: 40px;
+	
+}
+
+/* ===================================== */
+
+p.dbsx_{
+	background: url("../lg-images/4.png") no-repeat 50% 0px;
+}
+p.zsrw_ld{
+	background: url("../lg-images/6.png") no-repeat 50% 0px;
+}
+p.zswc_ld{
+	background: url("../lg-images/5.png") no-repeat 50% 0px;
+}
+.zs_div_{
+	width: 70%;
+	float: right;
+}
+.zs_div_>p{
+	width: 33.3%;
+	float: left;
+	height: 50px;
+	text-align: center;
+}
+.zs_div_>p>span{
+    display: inline-block;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	margin-top: 60px; 
+	
+}
+#content_top_tzgg>.content>p{
+	border-bottom: 1px dashed #999;
+	height:30px;
+	line-height: 30px;
+	width: 96%;
+	margin: 0 auto;
+}
+@media screen and (max-width: 1200px){
+	#content_botton_zszytj_bm{
+	width: 38.4%
+	}
+p.dbsx_{
+	background: url("../lg-images/4.png") no-repeat 3px 0px;
+}
+p.zsrw_ld{
+	background: url("../lg-images/6.png") no-repeat 3px 0px;
+}
+p.zswc_ld{
+	background: url("../lg-images/5.png") no-repeat 3px 0px;
+}
+/* ======================== */
+.zs_div>p.zsrw_{
+	background: url("../lg-images/1.png") no-repeat 0px 0px;
+}
+.zs_div>p.zswc_{
+	background: url("../lg-images/2.png") no-repeat 0px 0px;
+}
+.zs_div>p.syrw_{
+	background: url("../lg-images/3.png") no-repeat 0px 0px;
+}
+
+
+	
+}
+@media screen and (min-width: 1201px){
+	#content_botton_zszytj_bm{
+	width: 39.4%
+	}
+}
+
+.r-icon>img{
+	margin: 0px;
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

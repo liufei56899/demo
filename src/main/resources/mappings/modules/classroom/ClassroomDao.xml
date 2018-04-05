@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.classroom.dao.ClassroomDao">
+    
+	<sql id="classroomColumns">
+		a.id AS "id",
+		a.xh AS "xh",
+		a.jslh AS "jslh",
+		a.jsmph AS "jsmph",
+		a.jslx AS "jslx",
+		a.rnrs AS "rnrs",
+		a.status AS "status",
+		a.createperson AS "createperson",
+		a.createdate AS "createdate",
+		a.updateperson AS "updateperson",
+		a.updatedate AS "updatedate"
+	</sql>
+	
+	<sql id="classroomJoins">
+	</sql>
+    
+	<select id="get" resultType="Classroom">
+		SELECT 
+			<include refid="classroomColumns"/>
+		FROM classroom a
+		<include refid="classroomJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Classroom">
+		SELECT 
+			<include refid="classroomColumns"/>
+		FROM classroom a
+		<include refid="classroomJoins"/>
+		<where>
+			
+			<if test="jslh != null and jslh != ''">
+				AND a.jslh like CONCAT(CONCAT('%', #{jslh}), '%')	
+				
+			</if>
+			<if test="jsmph != null and jsmph != ''">
+				AND a.jsmph like CONCAT(CONCAT('%', #{jsmph}), '%')	
+			</if>
+			<if test="jslx != null and jslx != ''">
+				AND a.jslx = #{jslx}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Classroom">
+		SELECT 
+			<include refid="classroomColumns"/>
+		FROM classroom a
+		<include refid="classroomJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO classroom(
+			id,
+			xh,
+			jslh,
+			jsmph,
+			jslx,
+			rnrs,
+			status,
+			createperson,
+			createdate,
+			updateperson,
+			updatedate
+		) VALUES (
+			#{id},
+			#{xh},
+			#{jslh},
+			#{jsmph},
+			#{jslx},
+			#{rnrs},
+			#{status},
+			#{createperson},
+			#{createdate},
+			#{updateperson},
+			#{updatedate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE classroom SET
+			xh=#{xh}, 	
+			jslh = #{jslh},
+			jsmph = #{jsmph},
+			jslx = #{jslx},
+			rnrs = #{rnrs},
+			status = #{status},
+			createperson = #{createperson},
+			createdate = #{createdate},
+			updateperson = #{updateperson},
+			updatedate = #{updatedate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM classroom
+		WHERE id = #{id}
+	</update>
+	<select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(1)  FROM bj_jbxx WHERE classroomid=#{classroomid}
+    </select>
+     <select id="findBjJbxx" resultType="java.util.HashMap">
+         SELECT id,bjmc FROM bj_jbxx WHERE classroomid  is null and njid=#{njid}            
+    </select>  
+    
+    <select id="getBjJbxx" resultType="BjJbxx">
+         SELECT a.id,a.bjmc,a.njid AS "njid.id",b.xnmc AS "njid.nf",a.classroomid FROM bj_jbxx a LEFT JOIN xnxq_jbxx b ON b.id = a.njid WHERE classroomid=#{classroomid}             
+    </select>
+    
+    <update id="emptyClassroomId">
+		UPDATE bj_jbxx SET
+			classroomid=null
+		WHERE classroomid = #{classroomid}
+	</update> 
+</mapper>

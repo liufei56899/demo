@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.zsdj.dao.ZsdjDao">
+    
+	<sql id="zsdjColumns">
+		a.id AS "id",
+		a.jh_id AS "zsjh.id",
+		a.xm AS "xm",
+		a.xbm AS "xbm",
+		a.create_by AS "createBy.id",
+		(SELECT NAME FROM sys_user WHERE  id= a.js_id) as "name",
+		a.ly AS "ly",
+		a.js_id AS "js.id",
+		a.mb_id AS "office.id",
+		a.sfzjh AS "sfzjh",
+		a.zy_id AS "zy.id",
+		a.zylx_id AS "zylx.id",
+		a.jtzz AS "jtzz",
+		a.lxdh AS "lxdh",
+		a.sf_sy AS "sfSy",
+		a.xz AS "xz",
+		a.nation AS "nation",
+		a.sfzjlx AS "sfzjlx",
+		a.csrq AS "csrq",
+		a.nj AS "nj.id",
+		a.xnxq AS "xnxq.id",
+		xn.nf AS "nj.nf",
+		xnxq.xnmc AS "xnxq.xnmc",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o7.name AS "office.name",
+		zs.jhmc AS "zsjh.jhmc",
+		zy.zymc AS "zy.zymc",
+		d.label AS "xbname",
+		c.label AS "nationNmae",
+		e.label AS "zjlxName",
+		a.zsdjzt As "zsdjzt",
+		a.fromSchool AS "fromSchool",
+		a.sf As "sf",
+		a.cs As "cs",
+		a.qx As "qx",
+		a.jd As "jd",
+		sf.name As "sfName",
+		cs.name As "csName",
+		qx.name As "qxName",
+		jd.name As "jdName",
+		zc.label As "zsdjztname",
+		<!-- zc.label As "remarks", -->
+		zy.zymc AS "zymc",
+		zylx.lxmc AS "lxmc",
+		zylx.lxmc AS "zylx.lxmc",
+		a.xslym AS "xslym",
+		a.zkzh AS "zkzh",
+		a.jzName AS "jzName",
+		a.jzNumber AS "jzNumber",
+		a.xslx AS "xslx",
+		a.stuNumber AS "stuNumber",
+		a.bj AS "bj",
+		a.bkcc  AS "bkcc",
+ a.yyxykszsdj  AS "yyxykszsdj",
+ a.yyxukszscj  AS "yyxukszscj",
+ a.isyyjb  AS "isyyjb",
+ a.jbzylxid  AS "jbzylxid",
+ a.jbzyid  AS "jbzyid",
+ zylxj.lxmc  AS "jbzylxnm",
+ zyj.zymc  AS "jbzynm",
+ a.jbxz  AS "jbxz",
+ a.isdszcks  AS "isdszcks",
+ a.xxdate1  AS "xxdate1",
+ a.jdxy1  AS "jdxy1",
+ a.xxdate2  AS "xxdate2",
+ a.jdxy2  AS "jdxy2", 
+ a.xxdate3  AS "xxdate3",
+ a.jdxy3  AS "jdxy3", 
+ a.jcqk   AS "jcqk"
+	</sql>
+	
+	<sql id="zsdjJoins">
+		LEFT JOIN sys_office o7 ON o7.id = a.mb_id
+		LEFT JOIN zsjh zs ON zs.id = a.jh_id
+		LEFT JOIN zy_jbxx zy ON zy.id = a.zy_id
+		LEFT JOIN zylx_jbxx zylx ON zylx.id = a.zylx_id
+		LEFT JOIN zy_jbxx zyj ON zyj.id = a.jbzyid 
+        LEFT JOIN zylx_jbxx zylxj ON zylxj.id = a.jbzylxid 
+		LEFT JOIN sys_area sf ON sf.id = a.sf
+		LEFT JOIN sys_area cs ON cs.id = a.cs
+		LEFT JOIN sys_area qx ON qx.id = a.qx
+		LEFT JOIN sys_area jd ON jd.id = a.jd
+		left join xn_jbxx xn on xn.id = a.nj
+		left join xnxq_jbxx xnxq on xnxq.id = a.xnxq
+		left join sys_dict d on d.value = a.xbm
+			and d.type = 'sex'
+			AND d.del_flag='0'
+		left join sys_dict c on c.value = a.nation
+			and c.type = 'nation'
+			AND c.del_flag='0'
+		left join sys_dict e on e.value = a.sfzjlx
+			and e.type = 'sfzjlx'
+			AND e.del_flag='0'
+			
+			
+		left join sys_dict zc on zc.value = a.zsdjzt
+			and zc.type ='zsdjzt'
+			AND zc.del_flag='0'
+		
+	</sql>
+    
+	<select id="get" resultType="Zsdj">
+		SELECT 
+			<include refid="zsdjColumns"/>
+		FROM zsdj a
+		<include refid="zsdjJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getZsdjBySfzh" resultType="Zsdj">
+		SELECT 
+			<include refid="zsdjColumns"/>
+		FROM zsdj a
+		<include refid="zsdjJoins"/>
+		WHERE a.sfzjh = #{sfzjh}
+	</select>
+	
+	<select id="findZsdjBySfzh" resultType="Zsdj">
+		SELECT 
+			<include refid="zsdjColumns"/>
+		FROM zsdj a
+		<include refid="zsdjJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.sfzjh = #{sfzjh}
+			<if test="id !=null and id!=''">
+				and a.id !=#{id}
+			</if>
+	</select>
+	
+	<select id="findList" resultType="Zsdj">
+		SELECT 
+			<include refid="zsdjColumns"/>
+		FROM zsdj a
+		<include refid="zsdjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="zsjh != null and zsjh.id != null and zsjh.id != ''">
+				AND a.jh_id = #{zsjh.id}
+			</if>
+			<if test="xm != null and xm != ''">
+				AND a.xm LIKE 
+					<if test="dbName == 'oracle'">'%'||#{xm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xm},'%')</if>
+			</if>
+			<if test="sfzjh !=null and sfzjh !=''">
+				AND a.sfzjh LIKE 
+					<if test="dbName == 'oracle'">'%'||#{sfzjh}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{sfzjh}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{sfzjh},'%')</if>
+			</if>
+			<if test="xbm != null and xbm != ''">
+				AND a.xbm = #{xbm}
+			</if>
+			<if test="ly != null and ly != ''">
+				AND a.ly = #{ly}
+			</if>
+			<if test="js != null and js.id != null and js.id != ''">
+				AND a.js_id = #{js.id}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.mb_id = #{office.id}
+			</if>
+			<if test="zy != null">
+				<if test="zy.zymc !=null and zy.zymc !=''">
+					and zy.zymc like 
+					<if test="dbName == 'oracle'">'%'||#{zy.zymc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{zy.zymc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{zy.zymc},'%')</if>
+				</if>
+				<if test="zy.id !=null and zy.id !=''">
+					AND a.zy_id = #{zy.id}
+				</if>
+			</if>
+			<if test="zsdjzt!=null and zsdjzt !=''">
+				and a.zsdjzt in ( ${zsdjzt})
+			</if>
+			<if test="bj!=null and bj !=''">
+				and a.bj = #{bj}
+			</if>
+			<if test="xz!=null and xz !=''">
+				and a.xz = #{xz}
+			</if>
+			<if test="sf!=null and sf !=''">
+				and a.sf = #{sf}
+			</if>
+			<if test="cs!=null and cs !=''">
+				and a.cs = #{cs}
+			</if>
+			<if test="qx!=null and qx !=''">
+				and a.qx = #{qx}
+			</if>
+			<if test="jd!=null and jd !=''">
+				and a.jd = #{jd}
+			</if>
+			<if test="fromSchool!=null and fromSchool !=''">
+				and a.fromSchool = #{fromSchool}
+			</if>
+			<if test="zylx != null and zylx.id != null and zylx.id != ''">
+				AND a.zylx_id = #{zylx.id}
+			</if>
+			<if test="createBy != null and createBy != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="remarks !=null and remarks !=''">
+				<!-- 招生计划时间段内的 -->
+				and a.JH_ID in 
+				(
+					select c.id from zsjh c where c.del_flag = #{DEL_FLAG_NORMAL}
+					AND c.zt ='3'
+					AND c.endDate >= NOW()
+				)
+			</if>
+			<if test="start!= null and end != ''">
+				AND a.sfzjh in (
+					SELECT sfzjh FROM bd_jbxx WHERE create_date BETWEEN #{start} AND #{end}
+				)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Zsdj">
+		SELECT 
+			<include refid="zsdjColumns"/>
+		FROM zsdj a
+		<include refid="zsdjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="getZsdjListByCreate" resultType="Zsdj">
+	  
+	 SELECT z.xm,z.create_date,s.name AS name FROM zsdj z ,sys_user s 
+     WHERE DATE_FORMAT(z.create_date,'%Y-%m-%d') = ( SELECT DATE_FORMAT(NOW(),'%Y-%m-%d')) 
+     AND z.js_id = #{js.id} AND s.id = #{js.id};
+	   
+	</select>
+	
+	<select id="getZsdjList" resultType="Zsdj">
+	    select z.`XM` ,s.`name` as name ,zy.`ZYMC`,z.`LXDH` from zsdj z
+		left join sys_user s on z.`JS_ID` = s.`id`
+		inner join zy_jbxx zy on  zy.`ID` = z.`ZY_ID`
+		where z.JH_ID = #{jhid} AND z.del_flag ='0';
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO zsdj(
+			id,
+			jh_id,
+			xm,
+			xbm,
+			ly,
+			js_id,
+			mb_id,
+			sfzjh,
+			zy_id,
+			zylx_id,
+			jtzz,
+			lxdh,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			nj,
+			xnxq,
+			xz,
+			nation,
+			sfzjlx,
+			csrq,
+			zsdjzt,
+			sf,
+			cs,
+			qx,
+			jd,
+			del_flag,
+			fromSchool,
+			xslym,
+			zkzh,
+			jzName,
+			jzNumber,
+			xslx,
+			stuNumber,
+			bj,
+			bkcc , 
+			yyxykszsdj , 
+			yyxukszscj , 
+			isyyjb , 
+			jbzylxid , 
+			jbzyid , 
+			jbxz , 
+			isdszcks , 
+			xxdate1 , 
+			jdxy1 , 
+			xxdate2 , 
+			jdxy2 , 
+			xxdate3 , 
+			jdxy3 , 
+			jcqk , 
+			photo , 
+			qfjg ,
+			starttime ,
+			overtime
+		) VALUES (
+			#{id},
+			#{zsjh.id},
+			#{xm},
+			#{xbm},
+			#{ly},
+			#{js.id},
+			#{office.id},
+			#{sfzjh},
+			#{zy.id},
+			#{zylx.id},
+			#{jtzz},
+			#{lxdh},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{nj.id},
+			#{xnxq.id},
+			#{xz},
+			#{nation},
+			#{sfzjlx},
+			#{csrq},
+			#{zsdjzt},
+			#{sf},
+			#{cs},
+			#{qx},
+			#{jd},
+			#{delFlag},
+			#{fromSchool},
+			#{xslym},
+			#{zkzh},
+			#{jzName},
+			#{jzNumber},
+			#{xslx},
+			#{stuNumber},
+			#{bj},
+			#{bkcc} , 
+			#{yyxykszsdj}, 
+			#{yyxukszscj}, 
+			#{isyyjb}, 
+			#{jbzylxid}, 
+			#{jbzyid}, 
+			#{jbxz}, 
+			#{isdszcks}, 
+			#{xxdate1}, 
+			#{jdxy1}, 
+			#{xxdate2}, 
+			#{jdxy2}, 
+			#{xxdate3}, 
+			#{jdxy3}, 
+			#{jcqk}, 
+			#{photo}, 
+			#{qfjg},
+			#{starttime},
+			#{overtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE zsdj SET
+		<if test="xm !=null and xm !=''"> 
+			xm = #{xm},
+		        </if>
+		<if test="xbm !=null and xbm !=''"> 
+			xbm = #{xbm},
+			    </if>
+		<if test="ly !=null and ly !=''"> 
+			ly = #{ly},
+				</if>
+		<if test="js.id !=null and js.id !=''"> 
+			js_id = #{js.id},
+				</if>
+		<if test="office.id !=null and office.id !=''"> 
+			mb_id = #{office.id},
+				</if>
+		<if test="sfzjh !=null and sfzjh !=''"> 
+			sfzjh = #{sfzjh},
+				</if>
+		<if test="zy.id !=null and zy.id !=''"> 
+			zy_id = #{zy.id},
+				</if>
+		<if test="zylx.id !=null and zylx.id !=''"> 
+			zylx_id = #{zylx.id},
+				</if>
+		<if test="jtzz !=null and jtzz !=''"> 
+			jtzz = #{jtzz},
+				</if>
+		<if test="lxdh !=null and lxdh !=''"> 
+			lxdh = #{lxdh},
+				</if>
+		<if test="updateBy.id !=null and updateBy.id !=''"> 
+			update_by = #{updateBy.id},
+				</if>
+		<if test="updateDate !=null and updateDate !=''"> 
+			update_date = #{updateDate},
+				</if>
+		<!-- <if test="nj.id !=null and nj.id !=''"> 
+			nj = #{nj.id},
+		</if> -->
+		<if test="xnxq.id !=null and xnxq.id !=''"> 
+			xnxq = #{xnxq.id},
+				</if>
+		<if test="xz !=null and xz !=''"> 
+			xz = #{xz},
+				</if>
+		<if test="nation !=null and nation !=''"> 
+			nation = #{nation},
+				</if>
+		<if test="sfzjlx !=null and sfzjlx !=''"> 
+			sfzjlx = #{sfzjlx},
+				</if>
+		<if test="csrq !=null and csrq !=''"> 
+			csrq = #{csrq},
+				</if>
+		<if test="zsdjzt !=null and zsdjzt !=''"> 
+			zsdjzt = #{zsdjzt},
+				</if>
+		<if test="sf !=null and sf !=''"> 
+			sf = #{sf},
+				</if>
+		<if test="cs !=null and cs !=''"> 
+			cs = #{cs},
+				</if>
+		<if test="qx !=null and qx !=''"> 
+			qx = #{qx},
+				</if>
+		<if test="jd !=null and jd !=''"> 
+			jd = #{jd},
+				</if>
+		<if test="fromSchool !=null and fromSchool !=''"> 
+			fromSchool = #{fromSchool},
+				</if>
+		<if test="remarks !=null and remarks !=''"> 
+			remarks = #{remarks},
+				</if>
+		<if test="xslym !=null and xslym !=''"> 
+			xslym= #{xslym},
+				</if>
+		<if test="bj!=null and bj !=''"> 
+			zkzh= #{zkzh},
+				</if>
+		<if test="jzName !=null and jzName !=''"> 
+			jzName= #{jzName},
+				</if>
+		<if test="jzNumber !=null and jzNumber !=''"> 
+			jzNumber= #{jzNumber},
+				</if>
+		<if test="xslx !=null and xslx !=''"> 
+			xslx= #{xslx},
+				</if>
+		<if test="stuNumber !=null and stuNumber !=''"> 
+			stuNumber= #{stuNumber},
+				</if>
+		<if test="bj!=null and bj !=''"> 
+			bj= #{bj},
+				</if>
+		<if test="bkcc !=null and bkcc !=''"> 
+			bkcc = #{bkcc} , 
+				</if>
+		<if test="yyxykszsdj !=null and yyxykszsdj !=''"> 
+			yyxykszsdj = #{yyxykszsdj}, 
+				</if>
+		<if test="yyxukszscj !=null and yyxukszscj !=''"> 
+			yyxukszscj = #{yyxukszscj}, 
+				</if>
+		<if test="isyyjb !=null and isyyjb !=''"> 
+			isyyjb = #{isyyjb}, 
+				</if>
+		<if test="jbzylxid !=null and jbzylxid !=''"> 
+			jbzylxid = #{jbzylxid}, 
+				</if>
+		<if test="jbzyid !=null and jbzyid !=''"> 
+			jbzyid = #{jbzyid},
+				</if>
+		<if test="jbxz !=null and jbxz !=''">  
+			jbxz = #{jbxz}, 
+				</if>
+		<if test="isdszcks !=null and isdszcks !=''"> 
+			isdszcks = #{isdszcks}, 
+				</if>
+		<if test="xxdate1 !=null and xxdate1 !=''"> 
+			xxdate1 = #{xxdate1}, 
+				</if>
+		<if test="jdxy1 !=null and jdxy1 !=''"> 
+			jdxy1 =  #{jdxy1}, 
+				</if>
+		<if test="xxdate2 !=null and xxdate2 !=''"> 
+			xxdate2 = #{xxdate2}, 
+				</if>
+		<if test="jdxy2 !=null and jdxy2 !=''"> 
+			jdxy2 = #{jdxy2}, 
+				</if>
+		<if test="xxdate3 !=null and xxdate3 !=''"> 
+			xxdate3 = #{xxdate3}, 
+				</if>
+		<if test="jdxy3 !=null and jdxy3 !=''"> 
+			jdxy3 = #{jdxy3}, 
+				</if>
+		<if test="jcqk !=null and jcqk !=''"> 
+			jcqk = #{jcqk}, 
+				</if>
+		<if test="photo !=null and photo !=''"> 
+			photo = #{photo}, 
+				</if>
+		<if test="qfjg !=null and qfjg !=''"> 
+			qfjg = #{qfjg},
+				</if>
+		<if test="starttime !=null and starttime !=''"> 
+			starttime = #{starttime},
+				</if>
+		<if test="overtime !=null and overtime !=''"> 
+			overtime = #{overtime},
+				</if>
+		jh_id = #{zsjh.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE zsdj SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 查询所有生源校 -->
+	<select id="getBySchool" resultType="Map">
+		SELECT DISTINCT dj.fromSchool as fromSchool FROM zsdj dj
+LEFT JOIN zsjh jh ON jh.id=dj.jh_id
+ where fromSchool is NOT NULL AND jh.zsnd=#{zsnd}
+	</select>
+	
+	<!-- 根据生源校查询专业名称 -->
+	<select id="getSchoolByZYMC" resultType="Map">
+	SELECT impTable.fromSchool AS fromSchool,impTable.zyid AS zyid,concat(IFNULL(zy.ZYMC,'未知专业'),'(',b.label,')') AS zymc,IFNULL(zyRws.zyRws,0) AS rws,IFNULL(fromSchoolDjs.zyDjs,0) AS djs,IFNULL(fromSchoolWcs.zyWcs,0) AS wcs FROM
+(SELECT DISTINCT allFromSchollZy.fromSchool,allFromSchollZy.zyid FROM 
+	(SELECT dj.fromSchool as fromSchool,dj.ZY_ID AS zyid FROM zsdj dj
+	 LEFT JOIN zsjh jh ON jh.id=dj.JH_ID
+	 WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+	 GROUP BY dj.fromSchool,dj.ZY_ID
+	UNION
+	SELECT bd.fromSchool as fromSchool,bd.ZY_ID AS zyid FROM bd_jbxx bd
+	 LEFT JOIN zsjh jh ON jh.id=bd.JH_ID
+	 WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+	 GROUP BY bd.fromSchool,bd.ZY_ID) allFromSchollZy
+) impTable
+LEFT JOIN zy_jbxx zy ON zy.id=impTable.zyid
+left join sys_dict b on b.value = zy.xz
+			and b.type = 'xzdm'
+LEFT JOIN
+(SELECT dj.fromSchool as fromSchool,dj.ZY_ID AS zyid,COUNT(*) AS zyDjs FROM zsdj dj
+ LEFT JOIN zsjh jh ON jh.id=dj.JH_ID
+ WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+ GROUP BY dj.fromSchool,dj.ZY_ID) fromSchoolDjs ON fromSchoolDjs.fromSchool=impTable.fromSchool AND fromSchoolDjs.zyid=impTable.zyid
+LEFT JOIN 
+(SELECT bd.fromSchool as fromSchool,bd.ZY_ID AS zyid,COUNT(*) AS zyWcs FROM bd_jbxx bd
+ LEFT JOIN zsjh jh ON jh.id=bd.JH_ID
+ WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+ GROUP BY bd.fromSchool,bd.ZY_ID) fromSchoolWcs ON impTable.fromSchool=fromSchoolWcs.fromSchool AND impTable.zyid=fromSchoolWcs.zyid
+LEFT JOIN 
+(SELECT jhzy.zy_id AS zyid,zy.ZYMC AS zymc,SUM(jhzy.zsrs) AS zyRws FROM jh_zy_info jhzy
+ LEFT JOIN zsjh jh ON jh.id=jhzy.zsjh_id
+ LEFT JOIN zy_jbxx zy ON zy.id=jhzy.zy_id
+ WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+ GROUP BY jhzy.zy_id) zyRws ON zyRws.zyid=impTable.zyid
+WHERE impTable.fromSchool is not null and LENGTH(impTable.fromSchool)>0
+<if test="fromSchool !=null and fromSchool!=''">
+AND impTable.fromSchool=#{fromSchool}
+ </if>
+ORDER BY impTable.fromSchool,impTable.zyid
+	
+	</select>
+<!-- 年度间生源校分布情况 -->
+	<select id="getSchoolByDATE" resultType="Map">
+SELECT impTable.fromSchool AS fromSchool,impTable.zyid AS zyid,concat(IFNULL(zy.ZYMC,'未知专业'),'(',b.label,')') AS zymc,impTable.zsnd AS zsnd,IFNULL(zyRws.zyRws,0) AS rws,IFNULL(fromSchoolDjs.zyDjs,0) AS djs,IFNULL(fromSchoolWcs.zyWcs,0) AS wcs FROM
+(SELECT DISTINCT allFromSchollZy.fromSchool,allFromSchollZy.zyid,allFromSchollZy.ZSND FROM 
+	(SELECT dj.fromSchool as fromSchool,dj.ZY_ID AS zyid,jh.zsnd AS ZSND FROM zsdj dj
+	 LEFT JOIN zsjh jh ON jh.id=dj.JH_ID
+	 WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+	 GROUP BY dj.fromSchool,dj.ZY_ID
+	UNION
+	SELECT bd.fromSchool as fromSchool,bd.ZY_ID AS zyid,jh.zsnd AS ZSND FROM bd_jbxx bd
+	 LEFT JOIN zsjh jh ON jh.id=bd.JH_ID
+	 WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+	 GROUP BY bd.fromSchool,bd.ZY_ID) allFromSchollZy
+) impTable
+LEFT JOIN zy_jbxx zy ON zy.id=impTable.zyid
+left join sys_dict b on b.value = zy.xz
+			and b.type = 'xzdm'
+LEFT JOIN
+(SELECT dj.fromSchool as fromSchool,dj.ZY_ID AS zyid,COUNT(*) AS zyDjs FROM zsdj dj
+ LEFT JOIN zsjh jh ON jh.id=dj.JH_ID
+ WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+ GROUP BY dj.fromSchool,dj.ZY_ID) fromSchoolDjs ON fromSchoolDjs.fromSchool=impTable.fromSchool AND fromSchoolDjs.zyid=impTable.zyid
+LEFT JOIN 
+(SELECT bd.fromSchool as fromSchool,bd.ZY_ID AS zyid,COUNT(*) AS zyWcs FROM bd_jbxx bd
+ LEFT JOIN zsjh jh ON jh.id=bd.JH_ID
+ WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+ GROUP BY bd.fromSchool,bd.ZY_ID) fromSchoolWcs ON impTable.fromSchool=fromSchoolWcs.fromSchool AND impTable.zyid=fromSchoolWcs.zyid
+LEFT JOIN 
+(SELECT jhzy.zy_id AS zyid,zy.ZYMC AS zymc,SUM(jhzy.zsrs) AS zyRws FROM jh_zy_info jhzy
+ LEFT JOIN zsjh jh ON jh.id=jhzy.zsjh_id
+ LEFT JOIN zy_jbxx zy ON zy.id=jhzy.zy_id
+ WHERE jh.zsnd=#{zsnd} AND jh.zt='3' AND jh.del_flag='0'
+ GROUP BY jhzy.zy_id) zyRws ON zyRws.zyid=impTable.zyid
+where impTable.fromSchool is not null and LENGTH(impTable.fromSchool)>0
+ORDER BY impTable.fromSchool,impTable.zyid
+	
+	</select>
+		<!-- 根据年度查询所有生源校和专业 -->
+	<select id="getSchoolAndZY" parameterType="Map" resultType="Map">
+	SELECT DISTINCT IFNULL(dj.fromSchool,'其他') AS school,dj.zy_id AS zyid,concat(IFNULL(zy.ZYMC,'未知专业'),'(',b.label,')') AS zymc FROM zsdj dj
+LEFT JOIN zsjh jh ON jh.id=dj.jh_id
+INNER JOIN zy_jbxx zy on zy.id=dj.zy_id
+left join sys_dict b on b.value = zy.xz
+			and b.type = 'xzdm'
+ where dj.fromSchool is NOT NULL and LENGTH(dj.fromSchool)>0 AND jh.zsnd in(${zsndString}) 
+      <if test="syx !=null and syx!=''">
+                AND dj.fromSchool in(#{syx})
+	 </if>
+ ORDER BY dj.fromSchool
+	</select>
+	<!-- 多年度查询所有生源校 -->
+	<select id="getBySchools"   parameterType="Map" resultType="Map">
+		SELECT DISTINCT dj.fromSchool as fromSchool FROM zsdj dj
+LEFT JOIN zsjh jh ON jh.id=dj.jh_id
+ where fromSchool is NOT NULL AND jh.zsnd in(${zsndString})
+	</select>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jhfj.dao.JhFjDao">
+    
+	<sql id="jhFjColumns">
+		a.id AS "id",
+		a.jh_id AS "Zsjh.id",
+		a.bm_id AS "office.id",
+		a.zsrs AS "zsrs",
+		a.fj_flag AS "fjFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.approve_by AS "approveBy.id",
+		su.name AS "approveBy.name",
+		a.approve_date AS "approveDate",
+		a.grApprove_by AS "grApproveBy.id",
+		sugr.name AS "grApproveBy.name",
+		a.grApprove_date AS "grApproveDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.bcStatus AS "bcStatus",
+		a.spnr AS "spnr",
+		a.grShZt AS "grShZt",
+		a.grSpnr AS "grSpnr",
+		o3.name AS "office.name",
+		zs.jhmc AS "zsjh.jhmc"
+	</sql>
+	
+	<sql id="jhFjJoins">
+		LEFT JOIN sys_office o3 ON o3.id = a.bm_id
+		LEFT JOIN zsjh zs on zs.id = a.jh_id
+		LEFT JOIN sys_user su on su.id = a.approve_by
+		LEFT JOIN sys_user sugr on sugr.id = a.grApprove_by
+	</sql>
+    
+	<select id="get" resultType="JhFj">
+		SELECT 
+			<include refid="jhFjColumns"/>
+		FROM jh_fj a
+		<include refid="jhFjJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JhFj">
+		SELECT 
+			<include refid="jhFjColumns"/>
+		FROM jh_fj a
+		<include refid="jhFjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="Zsjh != null and Zsjh.id != null and Zsjh.id != ''">
+				AND a.jh_id = #{Zsjh.id}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.bm_id = #{office.id}
+			</if>
+			<if test="bcStatus != null and bcStatus != ''">
+				AND a.bcStatus = #{bcStatus}
+			</if>
+			<if test="fjFlag != null and fjFlag != ''">
+				AND a.fj_Flag = #{fjFlag}
+			</if>
+			
+			<if test="grShZt != null and grShZt != ''">
+				AND a.grShZt = #{grShZt}
+			</if>
+			
+			<if test="beginZsrs != null and endZsrs != null and beginZsrs != '' and endZsrs != ''">
+				AND a.zsrs BETWEEN #{beginZsrs} AND #{endZsrs}
+			</if>
+			
+			<if test="zsrs != null and zsrs != ''">
+				AND a.zsrs >= #{zsrs}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JhFj">
+		SELECT 
+			<include refid="jhFjColumns"/>
+		FROM jh_fj a
+		<include refid="jhFjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jh_fj(
+			id,
+			jh_id,
+			bm_id,
+			zsrs,
+			px,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{Zsjh.id},
+			#{office.id},
+			#{zsrs},
+			#{px},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jh_fj SET 	
+			jh_id = #{Zsjh.id},
+			bm_id = #{office.id},
+			zsrs = #{zsrs},
+			fj_Flag = #{fjFlag},
+			bcStatus = #{bcStatus},
+			spnr = #{spnr},
+			grShZt = #{grShZt},
+			grSpnr = #{grSpnr},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			approve_by = #{approveBy.id},
+			approve_date = #{approveDate},
+			grApprove_by = #{grApproveBy.id},
+			grApprove_date = #{grApproveDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jh_fj SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getLastJhFj" resultType="JhFj">
+		SELECT * FROM jh_fj where jh_id = #{Zsjh.id} and bm_id = #{office.id}
+	</select>
+	
+	<delete id="deleteJhFj">
+	  delete FROM jh_fj  
+	  where  id = #{id}
+	</delete>
+	
+</mapper>

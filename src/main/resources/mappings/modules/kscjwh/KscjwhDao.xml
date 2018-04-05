@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.kscjwh.dao.KscjwhDao">
+    
+	<sql id="kscjwhColumns">
+		a.id AS "id",
+		@rownum:=@rownum+1 AS "xh",
+		a.name AS "name",
+		a.tybe AS "tybe",
+		a.way AS "way",
+		a.school_year AS "schoolYear",
+		a.semester AS "semester",
+		a.score AS "score",
+		a.del_flag AS "delFlag",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="kscjwhJoins">
+	</sql>
+    
+	<select id="get" resultType="Kscjwh">
+		SELECT 
+			<include refid="kscjwhColumns"/>
+		FROM kscjwh a
+		<include refid="kscjwhJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Kscjwh">
+		SELECT 
+			<include refid="kscjwhColumns"/>
+		FROM (SELECT @rownum:=0) r, kscjwh a
+		<include refid="kscjwhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="semester != null and semester != ''">
+				AND a.semester = #{semester}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Kscjwh">
+		SELECT 
+			<include refid="kscjwhColumns"/>
+		FROM kscjwh a
+		<include refid="kscjwhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO kscjwh(
+			id,
+			name,
+			tybe,
+			way,
+			school_year,
+			semester,
+			score,
+			del_flag,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{name},
+			#{tybe},
+			#{way},
+			#{schoolYear},
+			#{semester},
+			#{score},
+			#{delFlag},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE kscjwh SET 	
+			name = #{name},
+			tybe = #{tybe},
+			way = #{way},
+			school_year = #{schoolYear},
+			semester = #{semester},
+			score = #{score},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE kscjwh SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

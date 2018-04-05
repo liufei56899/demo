@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.practicemanagement.dao.InformationTableDao">
+    
+	<sql id="informationTableColumns">
+		a.id AS "id",
+		a.xnxq AS "xnxq",
+		a.shijiantime1 AS "shijiantime1",
+		a.shijiantime2 AS "shijiantime2",
+		a.shijiantype AS "shijiantype",
+		a.znum AS "znum",
+		a.groupstuid AS "groupstuid",
+		a.zhihui AS "zhihui",
+		a.zhihuitime1 AS "zhihuitime1",
+		a.zhihuitime2 AS "zhihuitime2",
+		a.musical AS "musical",
+		a.mback AS "mback",
+		a.clothing AS "clothing",
+		a.cback AS "cback",
+		a.sttime1 AS "sttime1",
+		a.sttime2 AS "sttime2",
+		a.score AS "score",
+		a.tetime1 AS "tetime1",
+		a.tetime2 AS "tetime2",
+		a.remake AS "remake"
+	</sql>
+	
+	<sql id="informationTableJoins">
+		LEFT JOIN sys_user u9 ON u9.id = a.groupstudent
+		LEFT JOIN sys_user u10 ON u10.id = a.groupteacher
+		LEFT JOIN sys_user u11 ON u11.id = a.zhihui
+	</sql>
+    
+	<select id="get" resultType="InformationTable">
+		SELECT 
+			<include refid="informationTableColumns"/>
+		FROM information_table a
+		<include refid="informationTableJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="InformationTable">
+		SELECT 
+			<include refid="informationTableColumns"/>
+		FROM information_table a
+		<include refid="informationTableJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="InformationTable">
+		SELECT 
+			<include refid="informationTableColumns"/>
+		FROM information_table a
+		<include refid="informationTableJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO information_table(
+			id,
+			xnxq,
+			shijiantime1,
+			shijiantime2,
+			shijiantype,
+			znum,
+			groupstuid,
+			zhihui,
+			zhihuitime1,
+			zhihuitime2,
+			musical,
+			mback,
+			clothing,
+			cback,
+			sttime1,
+			sttime2,
+			score,
+			tetime1,
+			tetime2,
+			remake
+		) VALUES (
+			#{id},
+			#{xnxq},
+			#{shijiantime1},
+			#{shijiantime2},
+			#{shijiantype},
+			#{znum},
+			#{groupstuid},
+			#{zhihui},
+			#{zhihuitime1},
+			#{zhihuitime2},
+			#{musical},
+			#{mback},
+			#{clothing},
+			#{cback},
+			#{sttime1},
+			#{sttime2},
+			#{score},
+			#{tetime1},
+			#{tetime2},
+			#{remake}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE information_table SET 	
+			xnxq = #{xnxq},
+			shijiantime1 = #{shijiantime1},
+			shijiantime2 = #{shijiantime2},
+			shijiantype = #{shijiantype},
+			znum = #{znum},
+			groupstuid = #{groupstuid},
+			zhihui = #{zhihui},
+			zhihuitime1 = #{zhihuitime1},
+			zhihuitime2 = #{zhihuitime2},
+			musical = #{musical},
+			mback = #{mback},
+			clothing = #{clothing},
+			cback = #{cback},
+			sttime1 = #{sttime1},
+			sttime2 = #{sttime2},
+			score = #{score},
+			tetime1 = #{tetime1},
+			tetime2 = #{tetime2},
+			remake = #{remake}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM information_table
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

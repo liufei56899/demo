@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.bmfpjl.dao.BmFpJlDao">
+    
+	<sql id="bmFpJlColumns">
+		a.id AS "id",
+		a.syrs as "syrs",
+		a.bm_id AS "bmId.id",
+		(SELECT name FROM sys_office where id = a.bm_id) as "bmId.name",
+		a.areaSh_id as "areaSh.id",
+		(SELECT name FROM sys_area where id = a.areaSh_id ) as "areaSh.name",
+		a.areaS_id as "areaS.id",
+		(SELECT name FROM sys_area where id = a.areaS_id ) as "areaS.name",
+		a.areaQ_id as "areaQ.id",
+		(SELECT name FROM sys_area where id = a.areaQ_id ) as "areaQ.name",
+		a.jh_id AS "jhId",
+		a.bm_zsrs AS "bmZsrs",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="bmFpJlJoins">
+	</sql>
+    
+	<select id="get" resultType="BmFpJl">
+		SELECT 
+			<include refid="bmFpJlColumns"/>
+		FROM bm_fp_jl a
+		<include refid="bmFpJlJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findListByJhId" resultType="BmFpJl">
+		SELECT 
+			<include refid="bmFpJlColumns"/>
+		FROM bm_fp_jl a
+		<include refid="bmFpJlJoins"/>
+		<where>
+		   a.jh_id = #{jhId} and 
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+	</select>
+	
+	<select id="findList" resultType="BmFpJl">
+		SELECT 
+			<include refid="bmFpJlColumns"/>
+		FROM bm_fp_jl a
+		<include refid="bmFpJlJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BmFpJl">
+		SELECT 
+			<include refid="bmFpJlColumns"/>
+		FROM bm_fp_jl a
+		<include refid="bmFpJlJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO bm_fp_jl(
+			id,
+			bm_id,
+			jh_id,
+			bm_zsrs,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			syrs,
+			areaSh_id,
+			areaS_id,
+			areaQ_id
+		) VALUES (
+			#{id},
+			#{bmId.id},
+			#{jhId},
+			#{bmZsrs},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{syrs},
+			#{areaSh.id},
+			#{areaS.id},
+			#{areaQ.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bm_fp_jl SET 	
+			bm_id = #{bmId.id},
+			jh_id = #{jhId},
+			bm_zsrs = #{bmZsrs},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			syrs=#{syrs},
+			areaSh_id=#{areaSh.id},
+			areaS_id=#{areaS.id},
+			areaQ_id=#{areaQ.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bm_fp_jl SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

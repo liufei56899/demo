@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sjcggl.dao.SjcgglDao">
+    
+	<sql id="sjcgglColumns">
+		a.id AS "id",
+		@y:=@y+1 AS "num",
+		a.csmc AS "csmc",
+		a.csry AS "csry",
+		a.cssj AS "cssj",
+		a.hjqk AS "hjqk",
+		a.fj AS "fj",
+		a.uploadby AS "uploadBy",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="sjcgglJoins">
+	</sql>
+    
+	<select id="get" resultType="Sjcggl">
+		SELECT 
+			<include refid="sjcgglColumns"/>
+		FROM sjcggl a
+		<include refid="sjcgglJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Sjcggl">
+		SELECT 
+			<include refid="sjcgglColumns"/>
+		FROM sjcggl a,(SELECT @y:=0) as y
+		<include refid="sjcgglJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="csmc != null and csmc != ''">
+				AND a.csmc = #{csmc}
+			</if>
+			<if test="csry != null and csry != ''">
+				AND a.csry = #{csry}
+			</if>
+			<if test="cssj != null and cssj != ''">
+				AND a.cssj = #{cssj}
+			</if>
+			<if test="hjqk != null and hjqk != ''">
+				AND a.hjqk = #{hjqk}
+			</if>
+			<if test="uploadBy != null and uploadBy != ''">
+				AND a.uploadby = #{uploadBy}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sjcggl">
+		SELECT 
+			<include refid="sjcgglColumns"/>
+		FROM sjcggl a,(SELECT @y:=0) as y
+		<include refid="sjcgglJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sjcggl(
+			id,
+			csmc,
+			csry,
+			cssj,
+			hjqk,
+			fj,
+			uploadby,
+			create_by,
+			create_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{csmc},
+			#{csry},
+			#{cssj},
+			#{hjqk},
+			#{fj},
+			#{uploadBy},
+			#{createBy.id},
+			#{createDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sjcggl SET 	
+			csmc = #{csmc},
+			csry = #{csry},
+		   <if test="hjqk != null and hjqk != ''">
+			hjqk = #{hjqk},
+			</if>
+		 <if test="fj != null and fj != ''">
+		    fj = #{fj},
+			</if>
+			cssj = #{cssj}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sjcggl SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

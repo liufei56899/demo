@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jxdgxsfp.dao.JxDgXsfpDao">
+    
+	<sql id="jxDgXsfpColumns">
+		a.id AS "id",
+		a.xuhao AS "xuhao1",
+		a.jxdg_id AS "jxdgId",
+		a.jxnr AS "jxnr",
+		a.jk_count AS "jkCount1",
+		a.sj_count AS "sjCount1",
+		a.kw_count AS "kwCount1",
+		a.xj_count AS "xjCount"
+	</sql>
+	
+	<sql id="jxDgXsfpJoins">
+	</sql>
+    
+	<select id="get" resultType="JxDgXsfp">
+		SELECT 
+			<include refid="jxDgXsfpColumns"/>
+		FROM jx_dg_xsfp a
+		<include refid="jxDgXsfpJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JxDgXsfp">
+		SELECT 
+			<include refid="jxDgXsfpColumns"/>
+		FROM jx_dg_xsfp a
+		<include refid="jxDgXsfpJoins"/>
+		<where>
+			a.jxdg_id=#{jxdgId}
+			order by xuhao 
+		</where>
+	</select>
+	
+	<select id="findAllList" resultType="JxDgXsfp">
+		SELECT 
+			<include refid="jxDgXsfpColumns"/>
+		FROM jx_dg_xsfp a
+		<include refid="jxDgXsfpJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jx_dg_xsfp(
+			id,
+			xuhao,
+			jxdg_id,
+			jxnr,
+			jk_count,
+			sj_count,
+			kw_count,
+			xj_count
+		) VALUES (
+			#{id},
+			#{xuhao1},
+			#{jxdgId},
+			#{jxnr},
+			#{jkCount1},
+			#{sjCount1},
+			#{kwCount1},
+			#{xjCount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jx_dg_xsfp SET 	
+			jxdg_id = #{jxdgId},
+			xuhao=#{xuhao},
+			jxnr = #{jxnr},
+			jk_count = #{jkCount1},
+			sj_count = #{sjCount1},
+			kw_count = #{kwCount1},
+			xj_count = #{xjCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jx_dg_xsfp
+		WHERE id = #{id}
+	</update>
+	<update id="deLByJxDgId">
+		DELETE FROM jx_dg_xsfp
+		WHERE jxdg_id = #{jxdgId}
+	</update>
+	
+</mapper>

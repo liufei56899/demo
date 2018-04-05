@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.school.dao.SchoolinfoDao">
+    
+	<sql id="schoolinfoColumns">
+		a.id AS "id",
+		a.xxdm AS "xxdm",
+		a.xxmc AS "xxmc",
+		a.xxywmc AS "xxywmc",
+		a.xxdz AS "xxdz",
+		a.xxyzbm AS "xxyzbm",
+		a.xxyhbm AS "xxyhbm",
+		a.xzqhm AS "xzqhm",
+		a.jxny AS "jxny",
+		a.xzxm AS "xzxm",
+		a.lxdh AS "lxdh",
+		a.czdh AS "czdh",
+		a.dzxx AS "dzxx",
+		a.zydz AS "zydz",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="schoolinfoJoins">
+	</sql>
+    
+	<select id="get" resultType="Schoolinfo">
+		SELECT 
+			<include refid="schoolinfoColumns"/>
+		FROM schoolinfo a
+		<include refid="schoolinfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Schoolinfo">
+		SELECT 
+			<include refid="schoolinfoColumns"/>
+		FROM schoolinfo a
+		<include refid="schoolinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="xxmc != null and xxmc != ''">
+				AND a.xxmc LIKE 
+					<if test="dbName == 'oracle'">'%'||#{xxmc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xxmc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xxmc},'%')</if>
+			</if>
+			<if test="xzxm != null and xzxm != ''">
+				AND a.xzxm = #{xzxm}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Schoolinfo">
+		SELECT 
+			<include refid="schoolinfoColumns"/>
+		FROM schoolinfo a
+		<include refid="schoolinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO schoolinfo(
+			id,
+			xxdm,
+			xxmc,
+			xxywmc,
+			xxdz,
+			xxyzbm,
+			xxyhbm,
+			xzqhm,
+			jxny,
+			xzxm,
+			lxdh,
+			czdh,
+			dzxx,
+			zydz,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{xxdm},
+			#{xxmc},
+			#{xxywmc},
+			#{xxdz},
+			#{xxyzbm},
+			#{xxyhbm},
+			#{xzqhm},
+			#{jxny},
+			#{xzxm},
+			#{lxdh},
+			#{czdh},
+			#{dzxx},
+			#{zydz},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE schoolinfo SET 	
+			xxdm = #{xxdm},
+			xxmc = #{xxmc},
+			xxywmc = #{xxywmc},
+			xxdz = #{xxdz},
+			xxyzbm = #{xxyzbm},
+			xxyhbm = #{xxyhbm},
+			xzqhm = #{xzqhm},
+			jxny = #{jxny},
+			xzxm = #{xzxm},
+			lxdh = #{lxdh},
+			czdh = #{czdh},
+			dzxx = #{dzxx},
+			zydz = #{zydz},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE schoolinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

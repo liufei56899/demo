@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jhfjgr.dao.JhFjGrRwDao">
+    
+	<sql id="jhFjGrRwColumns">
+		a.id AS "id",
+		a.jh_fj_id AS "jhFjId",
+		a.sf AS "sf",
+		a.cs AS "cs",
+		a.qx AS "qx",
+		a.xz AS "xz",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jhFjGrRwJoins">
+	</sql>
+    
+	<select id="get" resultType="JhFjGrRw">
+		SELECT 
+			<include refid="jhFjGrRwColumns"/>
+		FROM jh_fj_gr_rw a
+		<include refid="jhFjGrRwJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JhFjGrRw">
+		SELECT 
+			<include refid="jhFjGrRwColumns"/>
+		FROM jh_fj_gr_rw a
+		<include refid="jhFjGrRwJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="jhFjId != null and jhFjId != ''">
+			and a.jh_fj_id = #{jhFjId}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JhFjGrRw">
+		SELECT 
+			<include refid="jhFjGrRwColumns"/>
+		FROM jh_fj_gr_rw a
+		<include refid="jhFjGrRwJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jh_fj_gr_rw(
+			id,
+			jh_fj_id,
+			sf,
+			cs,
+			qx,
+			xz,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{jhFjId},
+			#{sf},
+			#{cs},
+			#{qx},
+			#{xz},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jh_fj_gr_rw SET 	
+			jh_fj_id = #{jhFjId},
+			sf = #{sf},
+			cs = #{cs},
+			qx = #{qx},
+			xz = #{xz},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jh_fj_gr_rw SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getJhFjGrRwByJhFjId" resultType="JhFjGrRw">
+		SELECT rw.id,rw.jh_fj_id,
+		fj.jh_id as 'jhId',
+		fj.js_id as 'jsId',
+		rw.sf,dq1.name as 'sfName',
+		rw.cs,dq2.name as 'csName',
+		rw.qx,dq3.name as 'qxName',
+		rw.xz,dq4.name as 'xzName' 
+		FROM jh_fj_gr_rw rw
+		JOIN jh_fj_gr fj ON rw.jh_fj_id = fj.id
+		LEFT JOIN sys_area dq1 ON dq1.id = rw.sf
+		LEFT JOIN sys_area dq2 ON dq2.id = rw.cs
+		LEFT JOIN sys_area dq3 ON dq3.id = rw.qx
+		LEFT JOIN sys_area dq4 ON dq4.id = rw.xz
+		WHERE rw.del_flag = 0
+		<if test="jhFjId != null and jhFjId != ''">
+		and rw.jh_fj_id = #{jhFjId}
+		</if>
+		<if test="sf != null and sf != ''">
+		and rw.sf = #{sf}
+		</if>
+		<if test="cs != null and cs != ''">
+		and rw.cs = #{cs}
+		</if>
+		<if test="qx != null and qx != ''">
+		and rw.qx = #{qx}
+		</if>
+		 ORDER BY js_id,sf,cs,qx,xz
+	</select>
+	
+	<delete id="deleteJhFjGrRw">
+	  delete FROM jh_fj_gr_rw  
+	  where  jh_fj_id = #{jhFjId}
+	</delete>
+	
+</mapper>

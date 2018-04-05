@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jhfjgr.dao.JhFjGrRecordDao">
+    
+	<sql id="jhFjGrRecordColumns">
+		a.id AS "id",
+		a.jh_fj_gr_id AS "jhFjGrId",
+		a.jh_id AS "Zsjh.id",
+		a.js_id AS "jsId",
+		a.zsrs AS "zsrs",
+		a.px AS "px",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.approve_by AS "approveBy.id",
+		su.name AS "approveBy.name",
+		a.approve_date AS "approveDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.bcstatus AS "bcstatus",
+		a.spnr AS "spnr",
+		zs.jhmc AS "zsjh.jhmc",
+		u4.name AS "jsmc"
+	</sql>
+	
+	<sql id="jhFjGrRecordJoins">
+		LEFT JOIN sys_user u4 ON u4.id = a.js_id
+		LEFT JOIN zsjh zs on zs.id = a.jh_id
+		LEFT JOIN sys_user su on su.id = a.approve_by
+	</sql>
+    
+	<select id="get" resultType="JhFjGrRecord">
+		SELECT 
+			<include refid="jhFjGrRecordColumns"/>
+		FROM jh_fj_gr_record a
+		<include refid="jhFjGrRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JhFjGrRecord">
+		SELECT 
+			<include refid="jhFjGrRecordColumns"/>
+		FROM jh_fj_gr_record a
+		<include refid="jhFjGrRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="jhId != null and jhId != ''">
+				AND a.jh_id = #{jhId}
+			</if>
+			<if test="jhFjGrId != null and jhFjGrId != ''">
+				AND a.jh_fj_gr_id = #{jhFjGrId}
+			</if>
+			<if test="jsId != null and jsId != ''">
+				AND a.js_id = #{jsId}
+			</if>
+			<if test="zsrs != null and zsrs != ''">
+				AND a.zsrs = #{zsrs}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JhFjGrRecord">
+		SELECT 
+			<include refid="jhFjGrRecordColumns"/>
+		FROM jh_fj_gr_record a
+		<include refid="jhFjGrRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jh_fj_gr_record(
+			id,
+			jh_fj_gr_id,
+			jh_id,
+			js_id,
+			zsrs,
+			px,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			approve_by,
+			approve_date, 
+			remarks,
+			del_flag,
+			bcstatus,
+			spnr
+		) VALUES (
+			#{id},
+			#{jhFjGrId},
+			#{jhId},
+			#{jsId},
+			#{zsrs},
+			#{px},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{approveBy.id},
+			#{approveDate},
+			#{remarks},
+			#{delFlag},
+			#{bcstatus},
+			#{spnr}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jh_fj_gr_record SET 	
+			jh_fj_gr_id = #{jhFjGrId},
+			jh_id = #{jhId},
+			js_id = #{jsId},
+			zsrs = #{zsrs},
+			px = #{px},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			approve_by = #{approveBy.id},
+			approve_date = #{approveDate},
+			remarks = #{remarks},
+			bcstatus = #{bcstatus},
+			spnr = #{spnr}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getLastJhFjInfo" resultType="JhFjGrRecord">
+		SELECT * FROM jh_fj_gr_record where jh_fj_gr_id = #{jhFjGrId} and jh_id = #{Zsjh.id} and js_id = #{jsId}
+		ORDER BY create_date DESC LIMIT 1
+	</select>
+	
+	<update id="delete">
+		UPDATE jh_fj_gr_record SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

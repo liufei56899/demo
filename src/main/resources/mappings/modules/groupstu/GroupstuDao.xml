@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.groupstu.dao.GroupstuDao">
+    
+	<sql id="groupstuColumns">
+		a.id AS "id",
+		a.groupname AS "groupname",
+		a.groupnum AS "groupnum",
+		a.groupstudent AS "groupstudent",
+		a.groupteacher AS "groupteacher",
+		a.temp AS "temp",
+		a.xnxq AS "xnxq"
+	</sql>
+	
+	<sql id="groupstuJoins">
+	</sql>
+    
+	<select id="get" resultType="Groupstu">
+		SELECT 
+			<include refid="groupstuColumns"/>
+		FROM groupstu a
+		<include refid="groupstuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Groupstu">
+		SELECT 
+			<include refid="groupstuColumns"/>
+		FROM groupstu a
+		<include refid="groupstuJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Groupstu">
+		SELECT 
+			<include refid="groupstuColumns"/>
+		FROM groupstu a
+		<include refid="groupstuJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO groupstu(
+			id,
+			groupname,
+			groupnum,
+			groupstudent,
+			groupteacher,
+			temp,
+			xnxq
+		) VALUES (
+			#{id},
+			#{groupname},
+			#{groupnum},
+			#{groupstudent},
+			#{groupteacher},
+			#{temp},
+			#{xnxq}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE groupstu SET 	
+			groupname = #{groupname},
+			groupnum = #{groupnum},
+			groupstudent = #{groupstudent},
+			groupteacher = #{groupteacher},
+			temp = #{temp},
+			xnxq=#{xnxq}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM groupstu
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

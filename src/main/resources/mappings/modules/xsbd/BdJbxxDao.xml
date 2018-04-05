@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.xsbd.dao.BdJbxxDao">
+    
+	<sql id="bdJbxxColumns">
+		a.id AS "id",
+		a.nf AS "nf",
+		a.xq_id AS "xqId",
+		a.xm AS "xm",
+		a.xbm AS "xbm",
+		a.sfzjh AS "sfzjh",
+		a.zylx_id AS "zyId.id",
+		a.lxdh AS "lxdh",
+		a.csrq AS "csrq",
+		a.jtzz AS "jtzz",
+		a.jfzt AS "jfzt",
+		a.sfls AS "sfls",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.zy_id AS "zylxId",
+		zylx.lxmc AS "zyId.lxmc",
+		concat(zy.zymc,'(',b.label,')') AS "zyname",
+		a.photo AS "photo",
+		a.ybzy AS "ybzy",
+		a.cname AS "cname",
+		a.relation AS "relation",
+		a.nation AS "nation",
+		a.jg AS "jg",
+		a.otheraddress AS "otheraddress",
+		a.religion AS "religion",
+		a.sg AS "sg",
+		a.xx AS "xx",
+		a.whcd AS "whcd",
+		a.byzk AS "byzk",
+		a.fwcs AS "fwcs",
+		a.zy AS "zy",
+		a.bsx AS "bsx",
+		a.bzz AS "bzz",
+		a.sfzjlx AS "sfzjlx",
+		a.qfjg AS "qfjg",
+		a.starttime AS "starttime",
+		a.overtime AS "overtime",
+		a.datafrom AS "datafrom",
+		a.jh_id AS "zsjh.id",
+		a.ly AS "ly",
+		a.fromSchool AS "fromSchool",
+		a.js_id AS "js.id",
+		a.sf As "sf",
+		a.cs As "cs",
+		a.qx As "qx",
+		a.jd As "jd",
+		a.xslym AS "xslym",
+		a.zkzh AS "zkzh",
+		a.xslx AS "xslx",
+		a.stuNumber AS "stuNumber",
+		a.bj AS "bj"
+	</sql>
+	
+	<sql id="bdJbxxJoins">
+		left join zylx_jbxx zylx on zylx.id = a. zylx_id
+		left join zy_jbxx zy on zy.id = a.zy_id
+		LEFT JOIN sys_dict b on b.value = zy.xz and b.type = 'xzdm'
+	</sql>
+    
+	<select id="get" resultType="BdJbxx">
+		SELECT 
+			<include refid="bdJbxxColumns"/>
+		FROM bd_jbxx a
+		<include refid="bdJbxxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getBdJbxxBySfzh" resultType="BdJbxx">
+		SELECT 
+			<include refid="bdJbxxColumns"/>
+		FROM bd_jbxx a
+		<include refid="bdJbxxJoins"/>
+		WHERE a.sfzjh = #{sfzjh}
+	</select>
+	
+	<select id="findList" resultType="BdJbxx">
+		SELECT 
+			<include refid="bdJbxxColumns"/>
+		FROM bd_jbxx a
+		<include refid="bdJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="zsjh != null and zsjh.id != null and zsjh.id != ''">
+				AND a.jh_id = #{zsjh.id}
+			</if>
+			<if test="xm != null and xm != ''">
+				AND a.xm LIKE 
+					<if test="dbName == 'oracle'">'%'||#{xm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xm},'%')</if>
+			</if>
+			<if test="xbm != null and xbm != ''">
+				AND a.xbm = #{xbm}
+			</if>
+			<if test="ly != null and ly != ''">
+				AND a.ly = #{ly}
+			</if>
+			<if test="zyname !=null and zyname !=''">
+				and zy.zymc like 
+					<if test="dbName == 'oracle'">'%'||#{zyname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{zyname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{zyname},'%')</if>
+			</if>
+			
+			<if test="sfzjh !=null and sfzjh !=''">
+				and a.sfzjh like 
+					<if test="dbName == 'oracle'">'%'||#{sfzjh}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{sfzjh}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{sfzjh},'%')</if>
+			</if>
+			<if test="jfzt != null and jfzt != ''">
+				AND a.jfzt = #{jfzt}
+			</if>
+			<if test="sf!=null and sf !=''">
+				and a.sf = #{sf}
+			</if>
+			<if test="cs!=null and cs !=''">
+				and a.cs = #{cs}
+			</if>
+			<if test="qx!=null and qx !=''">
+				and a.qx = #{qx}
+			</if>
+			<if test="xz!=null and xz !=''">
+				and a.jd = #{jd}
+			</if>
+			<if test="js != null and js.id != null and js.id != ''">
+				AND a.js_id = #{js.id}
+			</if>
+			<if test="fromSchool!=null and fromSchool !=''">
+				and a.fromSchool = #{fromSchool}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BdJbxx">
+		SELECT 
+			<include refid="bdJbxxColumns"/>
+		FROM bd_jbxx a
+		<include refid="bdJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bd_jbxx(
+			id,
+			nf,
+			xq_id,
+			xm,
+			xbm,
+			sfzjh,
+			zylx_id,
+			lxdh,
+			csrq,
+			jtzz,
+			jfzt,
+			sfls,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			zy_id,
+			photo,
+			ybzy,
+			cname,
+			relation,
+			nation,
+			jg,
+			otheraddress,
+			religion,
+			sg,
+			xx,
+			whcd,
+			byzk,
+			fwcs,
+			zy,
+			bsx,
+			bzz,
+			sfzjlx,
+			qfjg,
+			starttime,
+			overtime,
+			datafrom,
+			jh_id,
+			sf,
+			cs,
+			qx,
+			jd,
+			ly,
+			js_id,
+			fromSchool,
+			xslym,
+			zkzh,
+			xslx,
+			stuNumber,
+			bj
+		) VALUES (
+			#{id},
+			#{nf},
+			#{xqId},
+			#{xm},
+			#{xbm},
+			#{sfzjh},
+			#{zyId.id},
+			#{lxdh},
+			#{csrq},
+			#{jtzz},
+			#{jfzt},
+			#{sfls},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{zylxId},
+			#{photo},
+			#{ybzy},
+			#{cname},
+			#{relation},
+			#{nation},
+			#{jg},
+			#{otheraddress},
+			#{religion},
+			#{sg},
+			#{xx},
+			#{whcd},
+			#{byzk},
+			#{fwcs},  
+			#{zy},
+			#{bsx},
+			#{bzz},
+			#{sfzjlx},
+			#{qfjg},
+			#{starttime},
+			#{overtime},
+			#{datafrom},
+			#{zsjh.id},
+			#{sf},
+			#{cs},
+			#{qx},
+			#{jd},
+			#{ly},
+			#{js.id},
+			#{fromSchool},
+			#{xslym},
+			#{zkzh},
+			#{xslx},
+			#{stuNumber},
+			#{bj}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bd_jbxx SET 	
+			nf = #{nf},
+			xq_id = #{xqId},
+			xm = #{xm},
+			xbm = #{xbm},
+			sfzjh = #{sfzjh},
+			zy_id = #{zylxId},
+			lxdh = #{lxdh},
+			csrq = #{csrq},
+			jtzz = #{jtzz},
+			jfzt = #{jfzt},
+			sfls = #{sfls},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			zylx_id = #{zyId.id},
+			photo = #{photo},
+			ybzy = #{ybzy},
+			cname = #{cname},
+			relation = #{relation},
+			nation = #{nation},
+			jg = #{jg},
+			otheraddress = #{otheraddress},
+			religion = #{religion},
+			sg = #{sg},
+			xx = #{xx},
+			whcd = #{whcd},
+			byzk = #{byzk},
+			fwcs = #{fwcs},
+			zy = #{zy},
+			bsx = #{bsx},
+			bzz = #{bzz},
+			sfzjlx = #{sfzjlx},
+			qfjg = #{qfjg},
+			starttime = #{starttime},
+			overtime = #{overtime},
+			datafrom = #{datafrom},
+			jh_id = #{zsjh.id},
+			sf = #{sf},
+			cs = #{cs},
+			qx = #{qx},
+			jd=#{jd},
+			ly = #{ly},
+			js_id = #{js.id},
+			fromSchool = #{fromSchool},
+			xslym= #{xslym},
+			zkzh= #{zkzh},
+			xslx= #{xslx},
+			stuNumber= #{stuNumber},
+			bj= #{bj}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bd_jbxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

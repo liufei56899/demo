@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.zy.dao.ZyJbxxDao">
+
+	<sql id="zyJbxxColumns">
+		a.id AS "id",
+		a.zylx AS "zylx.id",
+		(select lxmc from
+		zylx_jbxx where id = a.zylx) as "zylx.lxmc",
+		a.zymc AS "zymc",
+		a.zyms AS "zyms",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		<!-- a.remarks AS "remarks", -->
+		a.zymlbb AS "zymlbb",
+		a.zyfxmc AS "zyfxmc",
+		a.xz AS "xz",
+		a.sfsnzy AS "sfsnzy",
+		a.bxzybh AS "bxzybh",
+		a.zyjc AS "zyjc",
+		a.zyjss AS "zyjss",
+		a.zyzfs AS "zyzfs",
+		a.jlny AS "jlny",
+		a.bxzt AS "bxzt",
+		a.zydm AS "zydm",
+		b.label as "xzmc",
+		a.remarks AS "remarks", 
+		a.zymc AS "zyxzmc",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="zyJbxxJoins">
+		left join sys_dict b on b.value = a.xz
+			and b.type = 'xzdm'
+	</sql>
+
+	<select id="get" resultType="ZyJbxx">
+		SELECT
+		<include refid="zyJbxxColumns" />
+		FROM zy_jbxx a
+		<include refid="zyJbxxJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getValueByName" resultType="ZyJbxx">
+		SELECT
+		<include refid="zyJbxxColumns" />
+		FROM zy_jbxx a
+		<include refid="zyJbxxJoins" />
+		WHERE a.zymc like CONCAT(CONCAT('%', #{zymc}), '%')
+	</select>
+
+	<select id="findList" resultType="ZyJbxx">
+		SELECT
+		<include refid="zyJbxxColumns" />
+		FROM zy_jbxx a
+		<include refid="zyJbxxJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="zylx != null and zylx != ''">
+				<if test="zylx.id != null and zylx.id != ''">
+					AND a.zylx = #{zylx.id}
+				</if>
+			</if>
+			<if test="zymc != null and zymc != ''">
+				AND a.zymc like CONCAT(CONCAT('%', #{zymc}), '%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ZyJbxx">
+		SELECT
+		<include refid="zyJbxxColumns" />
+		FROM zy_jbxx a
+		<include refid="zyJbxxJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	
+	
+	
+	
+	<select id="findZyJbList" resultType="ZyJbxx">
+		SELECT 
+			<include refid="zyJbxxColumns"/>
+		FROM zy_jbxx a
+		<include refid="zyJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.zylx!='3697cb038d41494097e89113cfe8d662'
+		</where>		
+	</select>
+	
+	<select id="findAllZy" resultType="ZytjJbxx" >
+		SELECT zy.id AS "id" , zy.zymc AS "zymc" FROM zy_jbxx zy WHERE zy.del_flag='0' AND zy.bxzt='1'
+		ORDER BY zy.id 
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO zy_jbxx(
+			id,
+			zylx,
+			zymc,
+			zyms,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			zymlbb,
+			zyfxmc,
+			xz,
+			sfsnzy,
+			bxzybh,
+			zyjc,
+			zyjss,
+			zyzfs,
+			jlny,
+			bxzt,
+			zydm,
+			del_flag
+		) VALUES (
+			#{id},
+			#{zylx.id},
+			#{zymc},
+			#{zyms},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{zymlbb},
+			#{zyfxmc},
+			#{xz},
+			#{sfsnzy},
+			#{bxzybh},
+			#{zyjc},
+			#{zyjss},
+			#{zyzfs},
+			#{jlny},
+			#{bxzt},
+			#{zydm},
+			#{delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE zy_jbxx SET 	
+			zylx = #{zylx.id},
+			zymc = #{zymc},
+			zyms = #{zyms},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			zymlbb = #{zymlbb},
+			zyfxmc = #{zyfxmc},
+			xz = #{xz},
+			sfsnzy = #{sfsnzy},
+			bxzybh = #{bxzybh},
+			zyjc = #{zyjc},
+			zyjss = #{zyjss},
+			zyzfs = #{zyzfs},
+			jlny = #{jlny},
+			bxzt = #{bxzt},
+			zydm = #{zydm},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE zy_jbxx SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 统计年度专业招生 -->
+	
+	<select id="findNdzytjList" resultType="ZytjJbxx">
+	
+		SELECT sjtj.zyrs AS "zsrs",
+		sjtj.zy_id AS "id",
+		zymc  AS "zymc",
+		sjtj.label as "zyxzmc",
+		sjtj.jhtype  AS "zstype",
+		sjtj.zsjhid as "zsjhId"
+		 FROM 
+			(
+				SELECT SUM(jzy.`zsrs`) AS zyrs,jzy.`zy_id`,zy.`ZYMC`,b.label,'1' AS jhtype,jzy.zsjh_id as zsjhid FROM jh_zy_info jzy 
+				LEFT JOIN zsjh jh ON jh.id = jzy.zsjh_id
+				LEFT JOIN zy_jbxx zy ON zy.id = jzy.`zy_id` 
+				left join sys_dict b on b.value = zy.xz
+				and b.type = 'xzdm'
+				WHERE jh.del_flag='0'
+				AND jh.`zt`='3'
+				
+				<if test="newYear != null and newYear != ''">
+					 and jzy.zsjh_id in 
+						  (
+						  		SELECT jh.id FROM zsjh jh WHERE jh.zsnd = #{newYear}  and jh.del_flag ='0' and jh.zt='3'
+						  )
+				</if>
+				<if test="zsjhId!=null and zsjhId !=''">
+					and jzy.zsjh_id = #{zsjhId}
+				</if>
+				GROUP BY jzy.`zy_id`
+				UNION ALL
+				SELECT COUNT(1) AS zyrs,dj.zy_id,zy.zymc,b.label,'2' AS jhtype,dj.jh_id as zsjhid FROM zsdj dj 
+				LEFT JOIN zy_jbxx zy ON zy.id = dj.zy_id
+				left join sys_dict b on b.value = zy.xz
+				and b.type = 'xzdm'
+				WHERE dj.del_flag='0'
+				<if test="newYear != null and newYear != ''">
+					 and dj.jh_id in 
+						  (
+						  		SELECT jh.id FROM zsjh jh WHERE jh.zsnd = #{newYear}  and jh.del_flag ='0' and jh.zt='3'
+						  )
+				</if>
+				<if test="zsjhId!=null and zsjhId !=''">
+					and dj.jh_id = #{zsjhId}
+				</if>
+				GROUP BY dj.zy_id
+				UNION ALL
+				SELECT COUNT(1) AS zyrs,bd.zy_id,zy.zymc,b.label,'3' AS jhtype,bd.jh_id as zsjhid FROM bd_jbxx bd
+				LEFT JOIN zy_jbxx zy ON zy.id = bd.zy_id
+				left join sys_dict b on b.value = zy.xz
+				and b.type = 'xzdm'
+				WHERE bd.del_flag='0' 
+				AND bd.jfzt='1'
+				<if test="newYear != null and newYear != ''">
+					 and bd.jh_id in 
+						  (
+						  		SELECT jh.id FROM zsjh jh WHERE jh.zsnd = #{newYear}  and jh.del_flag ='0' and jh.zt='3'
+						  )
+				</if>
+				<if test="zsjhId!=null and zsjhId !=''">
+					and bd.jh_id = #{zsjhId}
+				</if>
+				GROUP BY bd.zy_id
+			)sjtj 
+			  
+			
+			<if test="id!=null and id !=''">
+				where sjtj.zy_id = #{id}
+			</if>
+			ORDER BY zy_id,sjtj.jhtype
+	</select>
+	
+	
+	<!-- 统计招生专业招生人数 -->
+	<select id="findNdzytjzysByid" resultType="ZytjJbxx">
+		SELECT IFNULL(SUM(jhzy.zsrs),0) AS zsrs, jhzy.zsjh_id AS jh_id,jhzy.zy_id,zy.zymc,
+				'1' AS zstype,'0' AS zsbm FROM jh_zy_info jhzy 
+		left join zy_jbxx zy ON zy.id = jhzy.zy_id
+				where  jhzy.zy_id=#{id}  
+				and 
+		 <if test="newYear != null and newYear != ''">
+		   jhzy.zsjh_id in 
+		  (
+		  		SELECT jh.id FROM zsjh jh WHERE jh.zsnd=#{newYear} 
+		  		 and jh.del_flag ='0' and jh.zt='3'
+		  )
+		</if>
+		<if test="zsjhId!=null and zsjhId !=''">
+			 jhzy.zsjh_id = #{zsjhId}
+		</if>
+	</select>
+	
+	<!--统计招生专业招生人数 -->
+	<select id="findNdzytjListByid" resultType="ZytjJbxx">
+		SELECT tj.zsrs,tj.jh_id,tj.zy_id,tj.zstype,tj.zsbm,b.label as zsbmmc FROM
+		 (
+			<!--  /*计划专业登记人数**/-->
+			 SELECT COUNT(1) AS zsrs,dj.jh_id,dj.zy_id,
+				'2' AS zstype,dj.ly AS zsbm FROM zsdj dj WHERE dj.del_flag='0' 
+				 <if test="newYear != null and newYear != ''">
+			 		and dj.jh_id in 
+					  (
+					  		SELECT jh.id FROM zsjh jh WHERE jh.zsnd=#{newYear}  and jh.del_flag ='0' and jh.zt='3'
+					  )
+				</if>
+				 <if test="zsjhId!=null and zsjhId !=''">
+					and	 dj.jh_id = #{zsjhId}
+				 </if>
+			
+				GROUP BY dj.ly,dj.zy_id
+			 UNION ALL 
+			 <!-- /*计划专业完成数*/-->
+			 SELECT COUNT(1) AS zsrs,bd.jh_id,bd.zy_id,
+				'3' AS zstype,bd.ly AS zsbm FROM bd_jbxx bd WHERE bd.del_flag='0'
+			 AND bd.jfzt='1'
+			 <if test="newYear != null and newYear != ''">
+		 		and bd.jh_id in 
+				  (
+				  		SELECT jh.id FROM zsjh jh WHERE jh.zsnd=#{newYear}  and jh.del_flag ='0' and jh.zt='3'
+				  )
+			</if>
+			 <if test="zsjhId!=null and zsjhId !=''">
+				and	 bd.jh_id = #{zsjhId}
+			 </if>
+			 GROUP BY bd.ly,bd.zy_id
+		) 
+			tj 
+			left join sys_dict b on b.value = tj.zsbm
+				and b.type = 'ly'
+			 WHERE 
+			
+			 tj.zy_id =#{id}
+			ORDER BY tj.zsbm,tj.zstype
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+</mapper>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.syxx.dao.SyJbxxDao">
+    
+	<sql id="syJbxxColumns">
+		a.id AS "id",
+		a.xm AS "xm",
+		a.xbm AS "xbm",
+		a.sf_id AS "sfId.id",
+		(select name from sys_area where id = a.sf_id) as "sfId.name",
+		a.cs_id AS "csId.id",
+		(select name from sys_area where id = a.cs_id) as "csId.name",
+		a.qx_id AS "qxId.id",
+		(select name from sys_area where id = a.qx_id) as "qxId.name",
+		a.xxdz AS "xxdz",
+		a.lxdh AS "lxdh",
+		a.sfzjh AS "sfzjh",
+		a.byxx AS "byxx",
+		a.xlm AS "xlm",
+		a.bm_id AS "office.id",
+		a.nf AS "nf",
+		a.xq_id AS "xqId",
+		a.create_by AS "createBy.id",
+		a.csrq AS "csrq",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.xsly AS "xsly",
+		a.xxmc AS "xxmc",
+		
+        o12.name AS "office.name"
+	</sql>
+	
+	<sql id="syJbxxJoins">
+		LEFT JOIN sys_office o12 ON o12.id = a.bm_id
+	</sql>
+    
+	<select id="get" resultType="SyJbxx">
+		SELECT 
+			<include refid="syJbxxColumns"/>
+		FROM sy_jbxx a
+		<include refid="syJbxxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SyJbxx">
+		SELECT 
+			<include refid="syJbxxColumns"/>
+		FROM sy_jbxx a
+		<include refid="syJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="sfId != null and sfId.id != null and sfId.id != ''">
+				AND a.sf_id = #{sfId.id}
+			</if>
+			<if test="csId != null and csId.id != null and csId.id != ''">
+				AND a.cs_id = #{csId.id}
+			</if>
+			<if test="qxId != null and qxId.id != null and qxId.id != ''">
+				AND a.qx_id = #{qxId.id}
+			</if>
+			<if test="xxdz != null and xxdz != ''">
+				AND a.xxdz like 
+				<if test="dbName == 'oracle'">'%'||#{xxdz}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{xxdz}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{xxdz},'%')</if>
+			</if>
+			<if test="sfzjh != null and sfzjh != ''">
+				AND a.sfzjh like 
+					<if test="dbName == 'oracle'">'%'||#{sfzjh}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{sfzjh}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{sfzjh},'%')</if>
+			</if>
+			<if test="byxx != null and byxx != ''">
+				AND a.byxx like 
+					<if test="dbName == 'oracle'">'%'||#{byxx}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{byxx}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{byxx},'%')</if>
+			</if>
+			<if test="xlm != null and xlm != ''">
+				AND a.xlm = #{xlm}
+			</if>
+			<if test="nf != null and nf != ''">
+				AND a.nf = #{nf}
+			</if>
+			<if test="xqId != null and xqId != ''">
+				AND a.xq_id = #{xqId}
+			</if>
+			<if test="xsly != null and xsly != ''">
+				AND a.xsly = #{xsly}
+			</if>
+			<if test="xbm!=null and xbm!=''">
+				AND a.xbm = #{xbm}
+			</if>
+			<if test="xm!=null and xm!=''">
+				and a.xm like 
+					<if test="dbName == 'oracle'">'%'||#{xm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xm},'%')</if>
+			</if>
+			
+			
+			<if test="xxmc != null and xxmc != ''">
+				AND a.xxmc = #{xxmc}
+			</if>
+			<if test="createBy != null and createBy != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SyJbxx">
+		SELECT 
+			<include refid="syJbxxColumns"/>
+		FROM sy_jbxx a
+		<include refid="syJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sy_jbxx(
+			id,
+			xm,
+			xbm,
+			sf_id,
+			cs_id,
+			qx_id,
+			xxdz,
+			lxdh,
+			sfzjh,
+			byxx,
+			xlm,
+			bm_id,
+			nf,
+			xq_id,
+			create_by,
+			csrq,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			xsly,
+			xxmc
+		) VALUES (
+			#{id},
+			#{xm},
+			#{xbm},
+			#{sfId.id},
+			#{csId.id},
+			#{qxId.id},
+			#{xxdz},
+			#{lxdh},
+			#{sfzjh},
+			#{byxx},
+			#{xlm},
+			#{office.id},
+			#{nf},
+			#{xqId},
+			#{createBy.id},
+			#{csrq},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{xsly},
+			#{xxmc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sy_jbxx SET 	
+			xm = #{xm},
+			xbm = #{xbm},
+			sf_id = #{sfId.id},
+			cs_id = #{csId.id},
+			qx_id = #{qxId.id},
+			xxdz = #{xxdz},
+			lxdh = #{lxdh},
+			sfzjh = #{sfzjh},
+			byxx = #{byxx},
+			xlm = #{xlm},
+			bm_id = #{office.id},
+			nf = #{nf},
+			xq_id = #{xqId},
+			csrq = #{csrq},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			xsly = #{xsly},
+			xxmc = #{xxmc}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sy_jbxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="bmrwfp">
+		UPDATE sy_jbxx SET 	
+			bm_id = #{office.id}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

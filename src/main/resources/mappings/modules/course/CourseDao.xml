@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.course.dao.CourseDao">
+    
+	<sql id="courseColumns">
+		a.id AS "id",
+		a.coursename AS "coursename",
+		a.teacherid AS "teacherid",
+		a.kssj AS "kssj",
+		a.teachername AS "teachername",
+		a.jssj AS "jssj",
+		a.createperson AS "createperson",
+		a.createdate AS "createdate",
+		a.remarks AS "remarks",
+		a.updateperson AS "updateperson",
+		a.updatedate AS "updatedate"
+		<!-- a.zyid AS "zyid",
+		(SELECT concat(z.zymc,'(',b.label,')') FROM zy_jbxx z LEFT JOIN sys_dict b on b.value = z.xz
+			and b.type = 'xzdm' where z.id = a.zyid) as "zymc",
+		a.xnid AS "xnid",	
+		b.nf as "xn",
+		a.zylxid AS "zylxid",
+		(SELECT lxmc FROM zylx_jbxx where id = a.zylxid) as "zylxmc" -->
+	</sql>
+	
+	<sql id="courseJoins">
+		<!-- left join xn_jbxx b on b.id = a.xnid -->
+	</sql>
+    
+	<select id="get" resultType="Course">
+		SELECT 
+			<include refid="courseColumns"/>
+		FROM course a
+		<include refid="courseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Course">
+		SELECT 
+			<include refid="courseColumns"/>
+		FROM course a
+		<include refid="courseJoins"/>
+		<where>
+			
+			<if test="coursename != null and coursename != ''">
+				AND a.coursename like CONCAT(CONCAT('%', #{coursename}), '%')			
+			</if>
+			<if test="teachername != null and teachername != ''">
+				AND a.teachername like CONCAT(CONCAT('%', #{teachername}), '%') 
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Course">
+		SELECT 
+			<include refid="courseColumns"/>
+		FROM course a
+		<include refid="courseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO course(
+			id,
+			coursename,
+			teacherid,
+			kssj,
+			teachername,
+			jssj,
+			createperson,
+			createdate,
+			remarks,
+			updateperson,
+			updatedate
+			<!-- zyid,
+			xnid,
+			zylxid -->
+		) VALUES (
+			#{id},
+			#{coursename},
+			#{teacherid},
+			#{kssj},
+			#{teachername},
+			#{jssj},
+			#{createperson},
+			#{createdate},
+			#{remarks},
+			#{updateperson},
+			#{updatedate}
+			<!-- #{zyid},
+			#{xnid},
+			#{zylxid} -->
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE course SET 	
+			coursename = #{coursename},
+			teacherid = #{teacherid},
+			kssj = #{kssj},
+			teachername = #{teachername},
+			jssj = #{jssj},
+			createperson = #{createperson},
+			createdate = #{createdate},
+			remarks = #{remarks},
+			updateperson = #{updateperson},
+			updatedate = #{updatedate}
+			<!-- zyid=#{zyid},
+			xnid=#{xnid},
+			zylxid=#{zylxid} -->
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM course
+		WHERE id = #{id}
+	</update>
+	
+	<select id="countCourseName" resultType="java.lang.Integer">
+		select count(1) from course where courseName=#{courseName}
+	</select>
+</mapper>

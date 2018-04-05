@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.studentattendance.dao.StudentattendanceDao">
+    
+	<sql id="studentattendanceColumns">
+		a.id AS "id",
+		a.groupname AS "groupname",
+		a.student AS "student",
+		a.musical AS "musical",
+		a.mback AS "mback",
+		a.clothing AS "clothing",
+		a.cback AS "cback",
+		a.worktime1 AS "worktime1",
+		a.worktime2 AS "worktime2",
+		a.score AS "score"
+	</sql>
+	
+	<sql id="studentattendanceJoins">
+	</sql>
+    
+	<select id="get" resultType="Studentattendance">
+		SELECT 
+			<include refid="studentattendanceColumns"/>
+		FROM studentattendance a
+		<include refid="studentattendanceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Studentattendance">
+		SELECT 
+			<include refid="studentattendanceColumns"/>
+		FROM studentattendance a
+		<include refid="studentattendanceJoins"/>
+		<where>
+			
+			<if test="groupname != null and groupname != ''">
+				AND a.groupname = #{groupname}
+			</if>
+			<if test="student != null and student != ''">
+				AND a.student = #{student}
+			</if>
+			<if test="score != null and score != ''">
+				AND a.score = #{score}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Studentattendance">
+		SELECT 
+			<include refid="studentattendanceColumns"/>
+		FROM studentattendance a
+		<include refid="studentattendanceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO studentattendance(
+			id,
+			groupname,
+			student,
+			musical,
+			mback,
+			clothing,
+			cback,
+			worktime1,
+			worktime2,
+			score
+		) VALUES (
+			#{id},
+			#{groupname},
+			#{student},
+			#{musical},
+			#{mback},
+			#{clothing},
+			#{cback},
+			#{worktime1},
+			#{worktime2},
+			#{score}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE studentattendance SET 	
+			groupname = #{groupname},
+			student = #{student},
+			musical = #{musical},
+			mback = #{mback},
+			clothing = #{clothing},
+			cback = #{cback},
+			worktime1 = #{worktime1},
+			worktime2 = #{worktime2},
+			score = #{score}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM studentattendance
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

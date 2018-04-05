@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.course.dao.CourseZyDao">
+	<sql id="coursezyColumns">
+	a.courseid	AS "courseid",
+	a.zylxid AS "zylxid",
+	a.zyid AS "zyid",
+	a.remarks AS "remarks",
+	a.createperson AS "createperson",
+	a.createdate AS "createdate",
+	a.updateperson AS "updateperson",
+	a.updatedate AS "updatedate"
+	</sql>
+	<sql id="coursezyJoins">
+		
+	</sql>
+    
+	<select id="findList" resultType="CourseZy">
+		SELECT 
+			<include refid="coursezyColumns"/>
+		FROM coursezy a
+		<include refid="coursezyJoins"/>
+		WHERE a.courseid = #{courseid}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO coursezy(
+			courseid,
+			zylxid,
+			zyid,
+			remarks,
+			createperson,
+			createdate,
+			updateperson,
+			updatedate	
+		) VALUES (
+			#{courseid},
+			#{zylxid},
+			#{zyid},
+			#{remarks},
+			#{createperson},
+			#{createdate},			
+			#{updateperson},
+			#{updatedate}
+		)
+	</insert>
+	<delete id="delete">
+		delete from coursezy where courseid = #{courseid}
+	</delete>
+</mapper>

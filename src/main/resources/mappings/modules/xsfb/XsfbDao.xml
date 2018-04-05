@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.xsfb.dao.XsfbDao">
+    
+	<sql id="zyJbxxColumns">
+		a.id AS "id",
+		zy_jbxx.zylx AS "zyId.zylx",
+		zy_jbxx.zymc AS "zyId.zymc",
+		zy_jbxx.zyms AS "zyms",
+		zy_jbxx.create_by AS "createBy.id",
+		zy_jbxx.create_date AS "createDate",
+		zy_jbxx.update_by AS "updateBy.id",
+		zy_jbxx.update_date AS "updateDate",
+		a.zy_id AS "zyId.id",
+		a.BJMC AS "bjmc",
+		a.NF AS "nf",
+		a.XQ_ID AS "xqid",
+		sys_user.name AS "jsId.name",
+		a.RNRS AS "rnrs",
+		IFNULL(fbqk.bjNum,0) AS "bjNum",
+		(a.RNRS- IFNULL(fbqk.bjNum,0))  AS "remarks",<!-- 剩余容纳 -->
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="zyJbxxJoins">
+		LEFT JOIN zy_jbxx zy_jbxx ON zy_jbxx.ID = a.ZY_ID
+		LEFT JOIN sys_user sys_user ON sys_user.id = a.JS_ID
+		LEFT JOIN 
+		(
+			SELECT xs_jbxx.BJMC,COUNT(1) AS bjNum FROM xs_jbxx xs_jbxx GROUP BY xs_jbxx.BJMC
+		)fbqk ON fbqk.BJMC =  a.ID
+		
+	</sql>
+    
+	<select id="get" resultType="BjJbxx">
+		SELECT 
+			<include refid="zyJbxxColumns"/>
+		FROM bj_jbxx a
+		<include refid="zyJbxxJoins"/>
+		WHERE a.id = #{id}
+	</select>	
+	<select id="findList" resultType="BjJbxx">
+		SELECT 
+			<include refid="zyJbxxColumns"/>
+		FROM bj_jbxx a
+		<include refid="zyJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="zyId != null and zyId != ''">
+				<if test="zyId.id !=null and zyId.id !=''">
+					AND a.zy_Id = #{zyId.id}
+				</if>
+			</if>
+			<if test="jsId != null and jsId != ''">
+				<if test="jsId.name!=null and jsId.name !=''">
+					AND sys_user.name like 
+					<if test="dbName == 'oracle'">'%'||#{jsId.name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{jsId.name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{jsId.name},'%')</if>
+				</if>
+			</if>
+			<if test="id!=null and id !=''">
+				and a.id = #{id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findAllList" resultType="BjJbxx">
+		SELECT 
+			<include refid="zyJbxxColumns"/>
+		FROM bj_jbxx a
+		<include refid="zyJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			
+			<if test="id!=null and id !=''">
+				and a.id = #{id}
+			</if>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO zy_jbxx(
+			id,
+			zylx,
+			zymc,
+			zyms,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{zylx},
+			#{zymc},
+			#{zyms},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE zy_jbxx SET 	
+			zylx = #{zylx},
+			zymc = #{zymc},
+			zyms = #{zyms},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	<update id="delete">
+		UPDATE zy_jbxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+</mapper>

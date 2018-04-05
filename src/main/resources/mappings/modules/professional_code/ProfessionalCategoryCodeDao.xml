@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.professional_code.dao.ProfessionalCategoryCodeDao">
+    
+	<sql id="professionalCategoryCodeColumns">
+		a.category_id AS "categoryId",
+		a.category_name AS "categoryName",
+		a.professional_id AS "professionalId",
+		a.professional_name AS "professionalName",
+		a.professional_emphasis AS "professionalEmphasis",
+		a.professional_version_date AS "professionalVersionDate"
+	</sql>
+	
+	<sql id="professionalCategoryCodeColumns1">
+		DISTINCT 
+		a.category_id AS "categoryId",
+		a.category_name AS "categoryName"
+	</sql>
+	
+	<sql id="professionalCategoryCodeJoins">
+	</sql>
+	
+    <select id="getCategoryByVersion" resultType="ProfessionalCategoryCode">
+    	SELECT 
+    	<include refid="professionalCategoryCodeColumns1"/>
+		FROM professional_category_code a
+		<include refid="professionalCategoryCodeJoins"/>
+		WHERE a.professional_version_date=#{professionalVersionDate} ORDER BY a.category_id ;
+    </select>
+	<select id="getProfessionalCategoryId" resultType="ProfessionalCategoryCode">
+		SELECT 
+			<include refid="professionalCategoryCodeColumns"/>
+		FROM professional_category_code a
+		<include refid="professionalCategoryCodeJoins"/>
+		WHERE a.category_id = #{categoryId}
+	</select>
+	<select id="getprofessionalEmphasisByProfessionalId" resultType="ProfessionalCategoryCode">
+		SELECT 
+			<include refid="professionalCategoryCodeColumns"/>
+		FROM professional_category_code a
+		<include refid="professionalCategoryCodeJoins"/>
+		WHERE a.professional_id = #{professionalId}
+	</select>
+	<select id="get" resultType="ProfessionalCategoryCode">
+		SELECT 
+			<include refid="professionalCategoryCodeColumns"/>
+		FROM professional_category_code a
+		<include refid="professionalCategoryCodeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ProfessionalCategoryCode">
+		SELECT 
+			<include refid="professionalCategoryCodeColumns"/>
+		FROM professional_category_code a
+		<include refid="professionalCategoryCodeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProfessionalCategoryCode">
+		SELECT 
+			<include refid="professionalCategoryCodeColumns"/>
+		FROM professional_category_code a
+		<include refid="professionalCategoryCodeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO professional_category_code(
+			category_id,
+			category_name,
+			professional_id,
+			professional_name,
+			professional_emphasis,
+			professional_version_date
+		) VALUES (
+			#{categoryId},
+			#{categoryName},
+			#{professionalId},
+			#{professionalName},
+			#{professionalEmphasis},
+			#{professionalVersionDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE professional_category_code SET 	
+			category_id = #{categoryId},
+			category_name = #{categoryName},
+			professional_id = #{professionalId},
+			professional_name = #{professionalName},
+			professional_emphasis = #{professionalEmphasis},
+			professional_version_date = #{professionalVersionDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM professional_category_code
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

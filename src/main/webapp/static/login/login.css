@@ -1,0 +1,232 @@
+@charset "utf-8";
+
+a:hover {
+	text-decoration: none;
+}
+
+body {
+	background: url("./bg.jpg") no-repeat;
+}
+
+.top {
+	margin: 0px auto 0;
+	background: url("./title.png") no-repeat;
+	height: 65px;
+	width: 766px;
+}
+
+.top>h1 {
+	font-size: 30px;
+	font-weight: bold;
+	color: #2170cc;
+	text-align: center;
+}
+
+.contant {
+	background: url("./contbg.png") no-repeat;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(  
+        src='./contbg.png', sizingMethod='scale' );
+	width: 1090px;
+	margin: 100px auto 0;
+	min-height: 600px;
+	padding-top: 30px;
+}
+
+.contant .cont { /*background: url("./images/boxbg.png") no-repeat;*/
+	background-size: 100% 100%;
+	height: 400px;
+	width: 900px;
+	margin: 50px auto 0;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(  
+            src='./boxbg.png', sizingMethod='scale' );
+}
+
+.contant .cont .cont-box {
+	padding: 25px;
+	margin: 0 auto;
+}
+
+.cont-left {
+	float: left;
+	width: 440px;
+	padding-top: 25px;
+}
+.cont-left>img{
+	margin-top: 0;
+}
+
+.cont-right {
+	float: right;
+	padding-top: 20px;
+	width: 340px;
+	/* margin-left: 20px; */
+}
+
+.cont-right>input {
+	display: block;
+	width: 262px;
+	height: 40px;
+	line-height: 40px;
+	border: none;
+	border: 1px solid #737373;
+	float: left;
+	margin-left: 20px;
+}
+.dl>a{
+	display: block; float:right;
+	color: #fff;
+	padding: 0 10px;
+	background-color: #169bd5;
+	font-size: 14px;
+	
+}
+
+#validateCode {
+	float:left;
+	width: 112px !important;
+}
+
+.cont-right>input.yzm {
+	margin: 20px 20px 0 18px;
+	width: 140px;
+}
+
+.cont-right .btn { /* clear: both;
+    height: 95px; */
+	width: 342px;
+}
+
+.cont-right .submitButton>input {
+	width: 100px;
+	display: block;
+	height: 35px;
+	line-height: 35px;
+	background-color: #169bd5;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 20px;
+	text-align: center;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	border: none;
+	font-family: 'Microsoft Yahei' !important;
+}
+
+.cont-right>h2 {
+	font-size: 20px;
+	font-weight: bold;
+	color: #70c045;
+	border-bottom: 1px solid #70c045;
+     height: 35px; 
+	line-height: 35px;
+}
+
+.submitButton {
+	clear: both;
+}
+
+.cont-right>h4 {
+	clear: both;
+	height: 20px;
+	line-height: 20px;
+	font-size: 14px;
+	text-align: center;
+	margin: 0px auto;
+	color: #656565;
+	width: 150px;
+	font-weight:bold;
+}
+
+.validateCode {
+	width: 55px;
+	height: 34px;
+	float: left;
+	margin-top: 0px;
+}
+
+.cont-right>label {
+	display: block;
+	float: left;
+	line-height: 40px;
+	margin-top: 20px;
+	font-size: 14px;
+	color: #086fc0;
+	font-weight: bold;
+}
+
+.cont-right>.dl>a{
+	display:block;
+	float:right;
+	padding:0 5px;
+	
+}
+.cont-right>.dl>a.ewm{
+	background: url(../login/ewm.png) no-repeat;
+	width:22px;
+	height:30px;
+	
+}
+.cont-right>.dl>a.phone{
+	background: url(../login/phone.png) no-repeat;
+	width:22px;
+	height:30px;
+}
+
+
+.code-img {
+	height: 40px;
+	margin-top: 18px;
+	float: left;
+}
+
+.code-img .code {
+	display: block;
+	height: 40px;
+	width: 100px;
+	float: left;
+	border: 1px solid #dddddd;
+}
+
+.code-img .code>img {
+	width: 100%;
+	height: 100%;
+}
+
+.code-img>a {
+	display: block;
+	float: left;
+	height: 45px;
+	line-height: 45px;
+	font-size: 14px;
+	margin-left: 20px;
+}
+
+.foot>p {
+	font-size: 18px;
+	font-weight: bold;
+	color: #555;
+	text-align: center;
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+
+/**********登录页面样式**************************/
+.login_label {
+	margin-top: 3px;
+}
+
+#username {
+	height: 35px;
+}
+
+#password {
+	height: 35px;
+}
+
+#validateCode {
+	height: 35px;
+}

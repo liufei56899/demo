@@ -1,0 +1,364 @@
+@charset "utf-8";
+a:hover{
+    text-decoration: none;
+}
+.o-photo_body,.s-photo_body,.t-photo_body,.f-photo_body{
+    border: 1px solid #cfd4d8;
+}
+.s-photo_body,.t-photo_body,.f-photo_body{
+    display: none;
+}
+.body-box{
+    min-width:1366px;
+}
+.photo-frame{
+    width: 80%;
+    margin: 0 auto;
+    height: 350px;
+}
+.photo-frame .photo{
+    width: 20%;
+    text-align: center;
+    float: left;
+    margin-top: 15px;
+    line-height:80px;
+}
+.photo-frame .photo .photo-font{
+    font-size: 18px;
+    font-weight: bold;
+}
+.photo .pic-btn,.ID-card .pic-btn{
+    width: 120px;
+    margin: 20px auto;
+    display: block;
+    border-radius: 5px;
+    background-color: #4c9ccf;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #ffffff;
+    border: none;
+}
+.hukobo,.qita{
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+.huko,.qitaj{
+    width: 80% !important;
+    height: 80% !important;
+    float: none!important;
+    margin: 0 auto;
+}
+.huko-btn,.qita-btn{
+    width: 80%;
+    margin: 5px auto;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #4c9ccf;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #fff;
+    border:none;
+
+}
+.pic>img{
+    width: 120px;
+    height: 160px;
+}
+.photo-frame .camera{
+    width: 25%;
+    height: 90%;
+    float: left;
+    margin-top: 15px;  
+    background-color: #000;
+}
+
+.qitaj{
+ background:url(../js/hkbsm.gif) no-repeat 50%;
+    background-size: 90%; 
+    z-index: 999;	
+}
+.huko{
+	 background:url(../js/hkbsm.gif) no-repeat 50%;
+    background-size: 90%; 
+    z-index: 999;	
+}
+ 
+
+.photo-frame .ID-card{
+    width: 15%;
+    height: 100%;
+    float: left;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    line-height:100px;
+}
+.photo-frame .id-card-camera{
+    width: 30%;
+    float: left;
+    height: 90%;
+    margin-top: 15px;
+     background:url(../js/sfzsm.gif) no-repeat 50%;
+     background-size: 90%; 
+     z-index: 999;
+}
+
+.btn{
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-top:1px solid #bbb;
+    
+}
+.btn>input{
+    margin: 0 10px;
+    font-size: 16px;
+    padding:10px;
+    background-color: #4c9ccf;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+}
+.f-information,.s-information,.t-information,.o-information{
+    border:1px solid #bbb;
+
+}
+
+
+ .f-information>div,.s-information>div,.t-information>div,.o-information>div{
+    float: left;
+    width: 49.8%;
+}
+.left-information{
+	    float: left;
+    width: 49.8%;
+}
+.right-information{
+	float: left;
+    width: 49.8%;
+}
+
+.right-information{
+    border-left:1px solid #bbb;
+    height: 900px;
+    position: relative;
+}
+.content-box{
+    min-width: 1366px;
+}
+.xj-pic{
+    position: absolute;
+    top:10px;
+    right: 3%;
+    width: 122px;
+    height: 162px;
+    background-color: #bbb;
+    border: 1px solid #4c9ccf;
+}
+.xj-pic>img{
+	margin-top: 0px !important;
+	margin-left: 0px !important;
+	width:120px !important;
+	height: 160px !important;
+}
+
+label.error{
+	display:inline;
+	background: url("unchecked.gif") no-repeat 0px 3px;
+    padding-left: 10px;
+    padding-bottom: 2px;
+    font-weight: bold;
+    color: #EA5200;
+    margin-left: 0px !important;
+    color: #fff !important;
+}
+
+.left-information .title,.right-information .title{
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #bbb;
+}
+.left-information .group,.right-information .group{
+    height: 40px;
+    line-height: 40px;
+    width: 50%;
+    float: left;
+}
+.r-group{
+    height: 40px;
+    line-height: 40px;
+    width: 40%;
+    float: left;	
+}
+.r-group label.gr-mc{
+	    display: block;
+    width: 48%;
+     font-size: 14px;
+  /*   font-weight: bold; */
+    text-align: right;
+    float: left;
+    line-height: 30px;
+    margin-top: 5px;
+}
+.left-information .group>label.gr-mc,.right-information .group>label.gr-mc{
+    display: block;
+    width: 35%;
+     font-size: 14px;
+   /*  font-weight: bold; */
+    text-align: right;
+    float: left;
+    line-height: 30px;
+}
+.gr-r-mc{
+	  display: block !important;
+    width: 75%;
+     font-size: 14px !important;
+    font-weight: bold;
+    float: left;
+    line-height: 40px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+}
+.right-group{
+	width: 75%;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+}
+.right-group>span{
+	font-size:14px;
+}
+.right-group .gr-mc{
+	display: block;
+    width: 35%;
+    font-size: 14px;
+    /* font-weight: bold; */
+    text-align: right;
+    float: left;
+    line-height: 30px;
+    margin-top: 5px;
+}
+.right-group .mc-input{
+	height: 40px !important;
+}
+.right-group .mc-input .requ{
+	height: 30px !important;
+	line-height: 20px !important;
+	width: 55% !important;
+	padding:0px;
+}
+.group>input{
+	padding: 0px;
+}
+.left-information .group>input.gr-input,.right-information .group>input.gr-input{
+    border-radius: 3px;
+    height:30px;
+    line-height: 30px;
+    width: 55%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear .2s, box-shadow linear .2s;
+    -moz-transition: border linear .2s, box-shadow linear .2s;
+    -o-transition: border linear .2s, box-shadow linear .2s;
+    transition: border linear .2s, box-shadow linear .2s;
+    padding: 0px !important;
+}
+.right-information .group>span{
+    font-size: 14px;
+    font-weight: bold;
+}
+.information-btn{
+    width: 100% !important;
+    height: 80px;
+    line-height: 80px;
+    border: 1px solid #bbb;
+    text-align: center;
+    font-size:16px;
+    font-weight:bold;
+}
+.information-btn>input{
+    background-color: #4c9ccf;
+    border: none;
+    border-radius: 5px;
+   
+    color: #ffffff;
+}
+.active{
+    background-color: #004986 !important;
+}
+.btn_{
+	width:100% !important;
+	height:60px !important;
+}
+.form-horizontal{
+	position: relative;
+	margin-top: 15px;
+}
+/* ======================================= */
+
+.cxtj{
+	height: 40px;
+	line-height:40px;
+	background-color: #BDD8EA;
+	font-size:14px;
+	font-weight: bold;
+}
+.cxtj-input{
+	height: 40px;
+	line-height:40px;
+}
+.cxtj-input>label{
+	display: block;
+	width: 20%;
+	float: left;
+	height: 30px;
+	line-height:30px;	
+	text-align:right;
+	margin-top: 5px;
+	margin-right: 10px;
+	font-size: 14px;
+	/* font-weight: bold; */
+}
+.cxtj-input>input,.cxtj-input>input-medium{
+	display: block;
+	width: 20%;
+	float: left;	
+	margin-top: 5px;
+}
+
+.cxtj-btn{
+	margin-top: 15px;
+	text-align: center;
+}
+.cxtj-btn>input{
+	height: 30px;
+	line-height: 20px;
+}
+.cxjg-box{
+	height: 251px;
+	overflow: scroll;
+	margin-top: 15px;
+}
+.cxjg_td{
+	height: 30px;
+	line-height: 20px;
+}
+
+
+
+
+
+
+
+

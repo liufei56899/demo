@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.xsfb.dao.FbxxDao">
+<select id="findList" resultType="Fbxx">
+		SELECT f.* FROM 
+			(SELECT			
+				e.id,				
+				e.bjmc,
+				e.zyid,
+				e.zymc,
+				COUNT(e.xm) yyxs,
+				SUM(CASE WHEN e.xbm='1' THEN 1 ELSE 0 END ) man,
+				SUM(CASE WHEN e.xbm='2' THEN 1 ELSE 0 END ) woman 
+			FROM(
+				SELECT 
+					c.*,
+					d.xm,
+					d.xbm 
+				FROM(
+					SELECT 
+						b.id,
+						b.bjmc,
+						b.zy_id AS zyid,
+						(SELECT zymc FROM zy_jbxx a WHERE a.id=b.zy_id) zymc
+					 FROM 
+					 bj_jbxx b WHERE b.del_flag='0'
+				)c
+				LEFT JOIN  
+					xs_jbxx d 
+				ON 
+					c.id=d.bjmc
+			)e 
+			GROUP BY 
+				e.bjmc)f
+		<where>			
+			<if test="bjmc != null and bjmc != ''">
+				AND f.bjmc LIKE concat('%',#{bjmc},'%')
+			</if>
+			<if test="zymc != null and zymc != ''">	
+				AND f.zymc LIKE concat('%',#{zymc},'%')					
+			</if>			
+		</where>
+			<choose>
+				<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+					ORDER BY ${page.orderBy}
+				</when>			
+		</choose>					
+	</select>
+	<update id="updateBjjbxx">
+		update bj_jbxx set sjrs=#{yyrs} where id=#{id}
+	</update>
+</mapper>

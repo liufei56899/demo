@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.jhfjgr.dao.JhFjGrDao">
+    
+	<sql id="jhFjGrColumns">
+		a.id AS "id",
+		a.jh_id AS "Zsjh.id",
+		a.js_id AS "jsId",
+		a.zsrs AS "zsrs",
+		a.px AS "px",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.approve_by AS "approveBy.id",
+		su.name AS "approveBy.name",
+		a.approve_date AS "approveDate",
+		a.del_flag AS "delFlag",
+		a.bcStatus AS "bcStatus",
+		a.spnr AS "spnr",
+		a.fjfs AS "fjfs",
+		zs.jhmc AS "zsjh.jhmc",
+		o3.name AS "officeId",
+		u3.name AS "jsmc"
+	</sql>
+	
+	<sql id="jhFjGrJoins">
+		LEFT JOIN sys_user u3 ON u3.id = a.js_id
+		LEFT JOIN sys_office o3 ON o3.id = u3.office_id
+		LEFT JOIN zsjh zs on zs.id = a.jh_id
+		LEFT JOIN sys_user su on su.id = a.approve_by
+	</sql>
+    
+	<select id="get" resultType="JhFjGr">
+		SELECT 
+			<include refid="jhFjGrColumns"/>
+		FROM jh_fj_gr a
+		<include refid="jhFjGrJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+
+	
+	<select id="findList" resultType="JhFjGr">
+		SELECT 
+			<include refid="jhFjGrColumns"/>
+			<if test="remarks!=null and remarks !=''">
+					,IFNULL(dj.num,0) as "remarks"
+			</if>
+			<if test="officeId != null and officeId != ''">
+				,IFNULL(dj.num,0) as "remarks"
+			</if>
+			
+			
+		FROM jh_fj_gr a
+		<include refid="jhFjGrJoins"/>
+		<if test="remarks!=null and remarks !=''">
+				LEFT JOIN (SELECT COUNT(*) AS num,js_id,jh_id FROM zsdj WHERE del_flag='0'
+       			GROUP BY js_id,jh_id) dj ON dj.js_id = a.js_id AND dj.jh_id = a.jh_id
+		</if>
+		<if test="officeId != null and officeId != ''">
+			LEFT JOIN 
+				(
+					 SELECT COUNT(*) AS num,js_id,jh_id,mb_id FROM zsdj WHERE del_flag='0'
+				       		GROUP BY js_id,jh_id,mb_id
+				
+				)dj ON dj.js_id = a.js_id AND dj.jh_id = a.jh_id AND dj.mb_id = u3.office_id
+		</if>
+		
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="Zsjh != null and Zsjh.id != null and Zsjh.id != ''">
+				AND a.jh_id = #{Zsjh.id}
+			</if>
+			<if test="jsId != null and jsId != ''">
+				AND a.js_id = #{jsId}
+			</if>
+			<if test="officeId != null and officeId != ''">
+				AND a.js_id IN( SELECT id FROM sys_user WHERE office_id = #{officeId}) 
+			</if>
+			<if test="bcStatus != null and bcStatus != ''">
+				AND a.bcStatus = #{bcStatus}
+			</if>
+			<if test="createBy != null and createBy != ''">
+				AND a.create_By = #{createBy.id}
+			</if>
+			<if test="fjfs != null and fjfs != ''">
+				AND a.fjfs = #{fjfs}
+			</if>
+			<if test="beginZsrs != null and endZsrs != null and beginZsrs != '' and endZsrs != ''">
+				AND a.zsrs BETWEEN #{beginZsrs} AND #{endZsrs}
+			</if>
+			<if test="zsrs != null and zsrs != ''">
+				AND a.zsrs >= #{zsrs}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JhFjGr">
+		SELECT 
+			<include refid="jhFjGrColumns"/>
+		FROM jh_fj_gr a
+		<include refid="jhFjGrJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jh_fj_gr(
+			id,
+			jh_id,
+			js_id,
+			zsrs,
+			px,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			fjfs
+		) VALUES (
+			#{id},
+			#{Zsjh.id},
+			#{jsId},
+			#{zsrs},
+			#{px},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{fjfs}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jh_fj_gr SET 	
+			jh_id = #{Zsjh.id},
+			js_id = #{jsId},
+			zsrs = #{zsrs},
+			px = #{px},
+			bcStatus = #{bcStatus},
+			spnr = #{spnr},
+			fjfs = #{fjfs},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			approve_by = #{approveBy.id},
+			approve_date = #{approveDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jh_fj_gr SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getLastJhFjInfo" resultType="JhFjGr">
+		SELECT * FROM jh_fj_gr where jh_id = #{Zsjh.id} and js_id = #{jsId}
+	</select>
+	
+	<delete id="deleteJhFjGr">
+	  delete FROM jh_fj_gr  
+	  where  id = #{id}
+	</delete>
+</mapper>

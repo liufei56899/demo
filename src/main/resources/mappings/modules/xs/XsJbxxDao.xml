@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.xs.dao.XsJbxxDao">
+    
+	<sql id="xsJbxxColumns">
+		a.id AS "id",
+		a.xm AS "xm",
+		a.xbm AS "xbm",
+		a.csrq AS "csrq",
+		a.sfzjlxm AS "sfzjlxm",
+		a.sfzjh AS "sfzjh",
+		a.xmpy AS "xmpy",
+		a.bjmc AS "bjmc.id",
+		<!-- (SELECT bjmc FROM bj_jbxx where id = a.bjmc) as 'bjmc.bjmc', -->
+		a.xh AS "xh",
+		a.xslbm AS "xslbm",
+		a.xxxsm AS "xxxsm",
+		a.rxfsm AS "rxfsm",
+		a.jdfsm AS "jdfsm",
+		a.gjdqm AS "gjdqm",
+		a.gatqwm AS "gatqwm",
+		a.hyzkm AS "hyzkm",
+		a.chcqj AS "chcqj",
+		a.sfsqzn AS "sfsqzn",
+		a.sydxzqhm AS "sydxzqhm",
+		a.csdxzqhm AS "csdxzqhm",
+		a.jgdxzqhm AS "jgdxzqhm",
+		a.hkszdqxyxxxdz AS "hkszdqxyxxxdz",
+		a.scpcs AS "scpcs",
+		a.hkszdxzqhm AS "hkszdxzqhm",
+		a.hkxz AS "hkxz",
+		a.xsjzdlx AS "xsjzdlx",
+		a.rxny AS "rxny",
+		a.zy_id AS "zyId.id",
+		a.zylx_id AS "zylxId.id",
+		a.zyjc AS "zyjc",
+		a.zyfx AS "zyfx",
+		a17.xz AS "xz",
+		a.mzm AS "mzm",
+		a.zzmmm AS "zzmmm",
+		a.jkzkm AS "jkzkm",
+		a.xslym AS "xslym",
+		a.zsdx AS "zsdx",
+		a.jhrlxdh AS "jhrlxdh",
+		a.byxx AS "byxx",
+		a.lxdh AS "lxdh",
+		a.zsfs AS "zsfs",
+		a.lzhzlx AS "lzhzlx",
+		a.zkzh AS "zkzh",
+		a.ksh AS "ksh",
+		a.kszf AS "kszf",
+		a.kstc AS "kstc",
+		a.ksjwbs AS "ksjwbs",
+		a.tjjl AS "tjjl",
+		a.lzhzbxfs AS "lzhzbxfs",
+		a.lzhzxxdm AS "lzhzxxdm",
+		a.xwjxd AS "xwjxd",
+		a.fdpyfs AS "fdpyfs",
+		a.ywxm AS "ywxm",
+		a.dzxx AS "dzxx",
+		a.jtxdz AS "jtxdz",
+		a.jtyzbm AS "jtyzbm",
+		a.jtdh AS "jtdh",
+		a.cyyxm AS "cyyxm",
+		a.cyygx AS "cyygx",
+		a.cyysfjhr AS "cyysfjhr",
+		a.cyylxdh AS "cyylxdh",
+		a.cyycsny AS "cyycsny",
+		a.cyysfzjlx AS "cyysfzjlx",
+		a.cyysfzjh AS "cyysfzjh",
+		a.cyymzm AS "cyymzm",
+		a.cyyzzmmm AS "cyyzzmmm",
+		a.cyyjkzkm AS "cyyjkzkm",
+		a.cyygzhxxdw AS "cyygzhxxdw",
+		a.cyyzw AS "cyyzw",
+		a.cyexm AS "cyexm",
+		a.cyegx AS "cyegx",
+		a.cyesfjhr AS "cyesfjhr",
+		a.cyelxdh AS "cyelxdh",
+		a.cyecsny AS "cyecsny",
+		a.cyesfzjlx AS "cyesfzjlx",
+		a.cyesfzjh AS "cyesfzjh",
+		a.cyemzm AS "cyemzm",
+		a.cyezzmmm AS "cyezzmmm",
+		a.cyejkzkm AS "cyejkzkm",
+		a.cyegzhxxdw AS "cyegzhxxdw",
+		a.cyezw AS "cyezw",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.shzt AS "shzt",
+		a.spnr AS "spnr",
+		a.approve_by AS "approveBy.id",
+		a.approve_date AS "approveDate",
+		su.name AS "approveBy.name",
+		a15.bjmc as "bjmc.bjmc",
+		bj2.bjmc as "newBjmc.bjmc",
+		a15.JS_ID as "bjmc.jsId",
+		a17.zymc as "zyId.zymc",
+		zy2.zymc as "newZyid.zymc",
+		zy2.xz as "newZyid.xz",
+		a17.xz as "zyId.xz",
+		zylx2.lxmc as "newZyid.zylx.lxmc",
+		a.nj AS "nj.id",
+		a.nj AS "xsnj",
+		xn.nf AS "nj.nf",
+		a.csd As "csd",
+		a.jg As "jg",
+		a.hkszd As "hkszd",
+		a.zsjj As "zsjj",
+		a.lzhzxxmc As "lzhzxxmc",
+		a.sfxwjxdxs As "sfxwjxdxs",
+		a.zssyd As "zssyd",
+		a.photo As "photo",
+		a.newBjmc As "newBjmc.id",
+		a.newZyid As "newZyid.id",
+		a.bgydlxzt As "bgydlxzt",
+		a.bgydlx As "bgydlx",
+		a18.LXMC as "zylxId.lxmc",
+		a.xnxq AS xnxq
+	</sql>
+	
+	<sql id="xsJbxxJoins">
+		<!-- //(SELECT bjmc FROM bj_jbxx where id = a.bjmc) -->
+		left join bj_jbxx a15 on a15.id = a.bjmc 
+		left join sys_user a16 on a16.id = a15.JS_ID
+		left join zy_jbxx a17 on a17.id = a.zy_id
+		left join zy_jbxx zy2 on zy2.id = a.newZyid
+		left join zylx_jbxx a18 on a18.id = a.zylx_id
+		left join zylx_jbxx zylx2 on zylx2.id = zy2.zylx
+		LEFT JOIN sys_user su on su.id = a.approve_by
+		left join xn_jbxx xn on xn.id = a.nj
+		left join bj_jbxx bj2 on bj2.id = a.newBjmc
+	</sql>
+    
+	<select id="get" resultType="XsJbxx">
+		SELECT 
+			<include refid="xsJbxxColumns"/>
+		FROM xs_jbxx a
+		<include refid="xsJbxxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	
+	<select id="findBanJiList" resultType="BjJbxx">
+		SELECT b.id,b.bjmc,b.rnrs FROM bj_jbxx b WHERE b.del_flag ='0' and b.zy_id = #{zyId.id}
+	</select>
+	
+	<select id="getBanJiNum"  resultType="XsJbxx">
+		SELECT * FROM xs_jbxx WHERE bjmc = #{bjmc.id} and id !=#{id} and del_flag ='0' 
+	</select>
+	
+	
+	<select id="selectXjList"  resultType="XsJbxx">
+		SELECT <include refid="xsJbxxColumns"/> FROM xs_jbxx a
+		<include refid="xsJbxxJoins"/> 
+		 WHERE a.sfzjh = #{sfzjh} and a.xm = #{xm} and a.del_flag ='0' 
+	</select>
+	
+	<select id="findList" resultType="XsJbxx">
+		SELECT 
+			<include refid="xsJbxxColumns"/>
+		FROM xs_jbxx a
+		<include refid="xsJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="xm != null and xm != ''">
+				AND a.xm LIKE
+					<if test="dbName == 'oracle'">'%'||#{xm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xm},'%')</if>
+			</if>
+			<if test="sfzjlxm != null and sfzjlxm != ''">
+				AND a.sfzjlxm = #{sfzjlxm}
+			</if>
+			<if test="shzt !=null and shzt !=''">
+				AND a.shzt = #{shzt}
+			</if>
+			
+			<if test="remarks!=null and remarks!=''">
+				AND a.shzt not in ('3','4')
+			</if>
+			
+			<if test="bjmc != null and bjmc != ''">
+				<if test="bjmc.bjmc !=null and bjmc.bjmc !=''">
+					AND a15.bjmc LIKE
+					<if test="dbName == 'oracle'">'%'||#{bjmc.bjmc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bjmc.bjmc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bjmc.bjmc},'%')</if>
+				</if>
+				<if test="bjmc.id !=null and bjmc.id !=''">
+					AND a.bjmc =#{bjmc.id}
+				</if>
+				<if test="bjmc.jsId !=null and bjmc.jsId.id !=''">
+					AND a15.js_id =#{bjmc.jsId.id}
+				</if>
+			</if>
+			
+			<if test="nj!=null and nj!=''">
+				<if test="nj.id!=null and nj.id !=''">
+					and a.nj = #{nj.id}
+				</if>
+			</if>
+			
+			<if test="zyId !=null and zyId !=''">
+				<if test="zyId.id !=null and zyId.id !=''">
+					and a.zy_id = #{zyId.id}
+				</if>
+				
+				<if test="zyId.zymc !=null and zyId.zymc !=''">
+					AND a17.zymc LIKE
+					<if test="dbName == 'oracle'">'%'||#{zyId.zymc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{zyId.zymc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{zyId.zymc},'%')</if>
+				</if>
+			</if>
+			
+			<if test="xh != null and xh != ''">
+				AND a.xh LIKE 
+					<if test="dbName == 'oracle'">'%'||#{xh}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xh}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xh},'%')</if>
+			</if>
+			<if test="rxfsm != null and rxfsm != ''">
+				AND a.rxfsm = #{rxfsm}
+			</if>
+			<if test="bgydlx != null and bgydlx != ''">
+				AND a.bgydlx = #{bgydlx}
+			</if>
+			<if test="bgydlxzt != null and bgydlxzt != ''">
+				AND a.bgydlxzt = #{bgydlxzt}
+			</if>
+			<if test="xslym != null and xslym != ''">
+				AND a.xslym = #{xslym}
+			</if>
+			<if test="bgydlxlszt != null and bgydlxlszt != ''">
+				<if test="bgydlxlszt =='9'.toString()">
+					AND (
+						(
+							ifnull(a.bgydlx, 0) != 2
+							AND ifnull(a.bgydlxzt, 0) = 0
+						)
+						OR (ifnull(a.bgydlxzt, 0) = 2)
+					)
+				</if>
+				<if test="bgydlxlszt !='9'.toString()">
+					AND (a.bgydlxzt = 1 or (a.bgydlx=2 AND a.bgydlxzt = 0))
+				</if>
+			</if>
+			
+			<if test="isXsFenBan !=null and isXsFenBan!= ''">
+				<if test="isXsFenBan =='1'.toString()">
+					AND a.bjmc is not null
+				</if>
+				<if test="isXsFenBan =='0'.toString()">
+					AND a.bjmc is null
+				</if>
+			</if>
+			
+			<if test="xbm !=null and xbm !=''">
+				and a.xbm = #{xbm}
+			</if>
+			
+			<if test="sfzjh !=null and sfzjh!= ''">
+				AND a.sfzjh LIKE 
+					<if test="dbName == 'oracle'">'%'||#{sfzjh}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{sfzjh}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{sfzjh},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.bjmc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="XsJbxx">
+		SELECT 
+			<include refid="xsJbxxColumns"/>
+		FROM xs_jbxx a
+		<include refid="xsJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="qytjList" resultType="XsJbxx">
+	   SELECT t.quyu ,t.rwl,t.zsl,t.bml FROM (
+       SELECT (SELECT NAME FROM sys_area WHERE id = jh.qx ) AS quyu ,
+              (SELECT parent_id FROM sys_area WHERE id = jh.qx ) AS parent_id, fj.zsrs AS rwl ,
+		CASE WHEN c.zsl = "" THEN "0" WHEN c.zsl IS NULL THEN "0" ELSE c.zsl END zsl,
+		CASE WHEN d.bml= "" THEN "0" WHEN d.bml IS NULL THEN "0" ELSE d.bml END bml
+		FROM jh_fj fj 
+		LEFT JOIN jh_fj_rw jh ON fj.id = jh.JH_FJ_ID
+		LEFT JOIN (SELECT COUNT(zsdj.id) AS zsl,jh_id
+		FROM zsdj
+		WHERE zsdj.jh_id = #{0}
+		GROUP BY zsdj.jh_id) c ON c.jh_id = fj.jh_id
+		LEFT JOIN( SELECT COUNT(xs_jbxx.id) AS bml,xs_jbxx.id
+		FROM zsjh LEFT JOIN xs_jbxx ON zsjh.id = xs_jbxx.id
+		WHERE zsjh.id = #{0}
+		GROUP BY xs_jbxx.id) d ON fj.id = d.id) AS t WHERE parent_id = #{1};
+   
+	</select>
+	
+	
+	<select id="zytjList" resultType="XsJbxx">
+		SELECT a.zymc,
+		CASE WHEN b.rwl = "" THEN "0" WHEN b.rwl IS NULL THEN "0" ELSE b.rwl END rwl,
+		CASE WHEN c.zsl = "" THEN "0" WHEN c.zsl IS NULL THEN "0" ELSE c.zsl END zsl,
+		CASE WHEN d.bml = "" THEN "0" WHEN d.bml IS NULL THEN "0" ELSE d.bml END bml FROM zy_jbxx a LEFT JOIN (
+		SELECT jzi.zy_id,jzi.zsrs AS rwl
+		FROM jh_zy_info jzi 
+		WHERE jzi.zsjh_id = #{jhid}
+		GROUP BY jzi.zy_id) b ON  a.id = b.zy_id
+		LEFT JOIN (
+		SELECT COUNT(zsdj.id) AS zsl,zy_id
+		FROM zsdj
+		WHERE zsdj.jh_id = #{jhid}
+		GROUP BY zsdj.zy_id) c ON  a.id = c.zy_id
+		LEFT JOIN (
+		SELECT COUNT(xs_jbxx.id) AS bml,xs_jbxx.zy_id
+		FROM zsdj
+		LEFT JOIN xs_jbxx
+		ON zsdj.sfzjh = xs_jbxx.sfzjh
+		WHERE zsdj.jh_id = #{jhid}
+		GROUP BY xs_jbxx.zy_id) d ON  a.id = d.zy_id
+	</select>
+	
+	<select id="lytjList" resultType="XsJbxx">
+		SELECT a.zymc,
+		CASE WHEN zsls = "" THEN "0" WHEN zsls IS NULL THEN "0" ELSE zsls END zsls,
+		CASE WHEN zsw = "" THEN "0" WHEN zsw IS NULL THEN "0" ELSE zsw END zsw,
+		CASE WHEN muming = "" THEN "0" WHEN muming IS NULL THEN "0" ELSE muming END muming,
+		CASE WHEN dljg = "" THEN "0" WHEN dljg IS NULL THEN "0" ELSE dljg END dljg
+		FROM zy_jbxx a LEFT JOIN (
+		SELECT zy_id,SUM(zsls)zsls,SUM(zsw)zsw,SUM(muming)muming,SUM(dljg)dljg FROM(
+		SELECT zsdj.zy_id,
+		CASE WHEN ly = 1 THEN 1 ELSE 0 END zsls,
+		CASE WHEN ly = 2 THEN 1 ELSE 0 END zsw,
+		CASE WHEN ly = 3 THEN 1 ELSE 0 END muming,
+		CASE WHEN ly = 4 THEN 1 ELSE 0 END dljg
+		FROM zsdj 
+		WHERE zsdj.jh_id = #{jhid})zstj
+		GROUP BY zy_id) b ON  a.id = b.zy_id
+	</select>
+	
+	
+	
+	<!-- 获取最新的招生计划ID -->
+	<select id="getZuiXinJhId" resultType="String">
+	   SELECT id FROM zsjh WHERE create_date = (SELECT MAX(create_date) FROM zsjh)
+	</select>
+	
+	<select id="zstjGrList" resultType="XsJbxx">
+      SELECT COUNT(*) AS rwl ,DATE_FORMAT(create_date,'%Y%m%d') AS zsw FROM zsdj WHERE  js_id = #{0} and jh_id =#{1} GROUP BY zsw 
+	 <!--  SELECT COUNT(*) AS zymc ,DATE_FORMAT(create_date,'%Y%m%d') AS lxmc 
+	  FROM zsdj z WHERE  z.js_id = #{jsid} AND z.jh_id = #{jhid}; -->
+	</select>
+	
+	
+	
+	<!-- 各部门任务招生统计量 -->
+	<select id="zstjBmcyList" resultType="Zsdj">
+       SELECT COUNT(*) AS rwl FROM zsdj dj
+       WHERE dj.create_by = #{officeId}
+        and dj.JH_ID = #{jhId} and dj.del_flag='0' AND dj.sfzjh IN (SELECT bd.sfzjh FROM bd_jbxx bd WHERE bd.JFZT='1' AND bd.del_flag='0' );
+	</select>
+	
+	<select id="zstjRoleList" resultType="XsJbxx">
+	  SELECT num AS rwl,NAME AS zymc 
+	  FROM ((SELECT COUNT(*) AS num,js_id FROM zsdj WHERE js_id IN(
+	       SELECT id FROM sys_user WHERE office_id = 
+	      (SELECT DISTINCT office_id FROM sys_role WHERE NAME = #{role})
+	      )
+	       GROUP BY js_id) a
+	JOIN (SELECT NAME ,id FROM sys_user WHERE id IN (SELECT js_id FROM zsdj
+	     WHERE js_id IN(
+	     SELECT id FROM sys_user WHERE office_id = 
+	     (SELECT DISTINCT office_id FROM sys_role WHERE NAME = #{role}))
+	     GROUP BY js_id)) b
+	ON a.js_id = b.id)
+	
+	
+	</select>
+	
+   <!-- 部门招生任务完成统计 -->
+	<select id="zstjgbmDbList" resultType="Zsdj">
+	    <!-- SELECT COUNT(*) AS rwl,off.name AS zymc,fj.`ZSRS` AS zsl  FROM zsdj dj
+		INNER JOIN sys_office off ON off.`id` = dj.`MB_ID`
+		INNER JOIN jh_fj fj ON fj.`BM_ID` = dj.`MB_ID`
+		GROUP BY mb_id; -->
+		<!-- SELECT COUNT(1) AS rwl,gr.zsl ,gr.zymc,dj.MB_ID  FROM zsdj dj 
+		INNER JOIN 
+		(
+			SELECT COUNT(1) AS z,off.name AS zymc,off.id AS offid,
+			SUM(gr.ZSRS) AS zsl
+			FROM jh_fj_gr gr
+			LEFT JOIN sys_user sysu ON sysu.id=gr.JS_ID
+			LEFT JOIN sys_office off ON off.id= sysu.office_id
+		        WHERE gr.JH_ID=#{jhId}
+		        AND gr.bcStatus='1'
+			GROUP BY off.id
+		) gr ON gr.offid = dj.MB_ID
+		WHERE dj.JH_ID=#{jhId}  and dj.del_flag='0'
+		GROUP BY dj.MB_ID -->
+		SELECT tj.rwl AS rwl,tj.zymc,tj.mbid,SUM(tj.zsl) AS zsl FROM
+		(
+		
+		SELECT COUNT(1) AS rwl,gr.zymc AS zymc, gr.zsl AS zsl,dj.MB_ID AS mbid FROM zsjyxt.zsdj dj 
+		INNER JOIN 
+		(
+			SELECT COUNT(1) AS z,off.name AS zymc,off.id AS offid,
+			SUM(gr.ZSRS) AS zsl
+			FROM jh_fj_gr gr
+			LEFT JOIN sys_user sysu ON sysu.id=gr.JS_ID
+			LEFT JOIN sys_office off ON off.id= sysu.office_id
+		        WHERE gr.JH_ID=#{jhId}
+				AND gr.bcStatus='1'
+			GROUP BY off.id
+		) gr ON gr.offid = dj.MB_ID
+		WHERE dj.JH_ID=#{jhId}
+		AND dj.del_flag='0' AND dj.sfzjh IN (SELECT bd.sfzjh FROM bd_jbxx bd WHERE bd.JFZT='1' AND bd.del_flag='0' )
+		GROUP BY dj.MB_ID
+		<!-- UNION
+		SELECT COUNT(1) AS rwl,fj.zymc AS zymc ,fj.zsl AS zsl,dj.MB_ID AS mbid FROM zsjyxt.zsdj dj 
+		INNER JOIN 
+		(
+			SELECT off.name AS zymc,off.id AS offid,
+			SUM(fj.ZSRS) AS zsl
+			FROM jh_fj fj
+			LEFT JOIN sys_office off ON off.id= fj.BM_ID
+		        WHERE fj.JH_ID=#{jhId}
+			GROUP BY off.id
+		) fj ON fj.offid = dj.MB_ID
+		WHERE dj.JH_ID= #{jhId}
+		AND dj.del_flag='0'
+		GROUP BY dj.MB_ID -->
+		)
+		 tj 
+		 
+		 GROUP BY tj.mbid
+	</select>
+	
+	<select id="zstjBmgrList" resultType="Zsdj">
+		SELECT COUNT(1) AS rwl,fj.zymc,fj.zsl,dj.MB_ID  FROM zsdj dj 
+		INNER JOIN 
+		(
+			SELECT off.name AS zymc,off.id AS offid,
+			SUM(fj.ZSRS) AS zsl
+			FROM jh_fj fj
+			LEFT JOIN sys_office off ON off.id= fj.BM_ID
+		        WHERE fj.JH_ID= #{jhId}
+		        <!-- AND fj.grShZt='1' -->
+			GROUP BY off.id
+		) fj ON fj.offid = dj.MB_ID
+		WHERE dj.JH_ID= #{jhId} and dj.del_flag='0'
+		GROUP BY dj.MB_ID 
+	</select>
+	
+	<select id="zstjgzyList" resultType="Zsdj">
+      SELECT COUNT(dj.ZY_ID) AS rwl,CONCAT(zy.ZYMC,"(",b.label,")") AS ZYMC FROM 
+		zsdj dj 
+	  INNER JOIN  (SELECT jh1.* FROM zsjh jh1 WHERE jh1.used = '0' AND jh1.ZT='3') jh ON dj.JH_ID = jh.id
+	  INNER JOIN  zy_jbxx zy ON zy.ID = dj.ZY_ID
+	  left join sys_dict b on b.value = zy.xz
+			and b.type = 'xzdm'
+	  where dj.jh_id = #{id} and dj.del_flag='0'
+	  GROUP BY dj.ZY_ID
+	</select>
+	
+	<select id="getGeRenXinXi" resultType="XsJbxx">
+	   SELECT zsrs AS rwl,num AS zsl,MAX(create_date) FROM (
+       SELECT zsrs,num,a.JS_ID,a.bcStatus,a.create_date FROM jh_fj_gr a 
+       LEFT JOIN (SELECT COUNT(*) AS num,js_id FROM zsdj WHERE del_flag='0'
+       GROUP BY js_id) j  ON a.JS_ID = j.js_id) d WHERE d.js_id = #{userId} AND num IS NOT NULL AND bcStatus = '1';
+	</select>
+	
+	<select id="findXueShengListByBj" resultType="XsJbxx">
+		SELECT xs_jbxx.ID,xs_jbxx.XM,sys_dict.label as 'xbm' FROM zsjyxt.xs_jbxx xs_jbxx 
+		left join sys_dict sys_dict on sys_dict.value = xs_jbxx.xbm
+		 and sys_dict.type='sex'
+		WHERE 1=1 
+		
+		<if test="bjmc!=null and bjmc!=''">
+			AND xs_jbxx.BJMC = #{bjmc.id}
+		</if>
+		<if test="bjmc ==null or bjmc ==''">
+			AND xs_jbxx.BJMC IS NULL
+		</if>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO xs_jbxx(
+			id,
+			xm,
+			xbm,
+			csrq,
+			sfzjlxm,
+			sfzjh,
+			xmpy,
+			bjmc,
+			xh,
+			xslbm,
+			xxxsm,
+			rxfsm,
+			jdfsm,
+			gjdqm,
+			gatqwm,
+			hyzkm,
+			chcqj,
+			sfsqzn,
+			sydxzqhm,
+			csdxzqhm,
+			jgdxzqhm,
+			hkszdqxyxxxdz,
+			scpcs,
+			hkszdxzqhm,
+			hkxz,
+			xsjzdlx,
+			rxny,
+			zy_id,
+			zyjc,
+			zyfx,
+			xz,
+			mzm,
+			zzmmm,
+			jkzkm,
+			xslym,
+			zsdx,
+			jhrlxdh,
+			byxx,
+			lxdh,
+			zsfs,
+			lzhzlx,
+			zkzh,
+			ksh,
+			kszf,
+			kstc,
+			ksjwbs,
+			tjjl,
+			lzhzbxfs,
+			lzhzxxdm,
+			xwjxd,
+			fdpyfs,
+			ywxm,
+			dzxx,
+			jtxdz,
+			jtyzbm,
+			jtdh,
+			cyyxm,
+			cyygx,
+			cyysfjhr,
+			cyylxdh,
+			cyycsny,
+			cyysfzjlx,
+			cyysfzjh,
+			cyymzm,
+			cyyzzmmm,
+			cyyjkzkm,
+			cyygzhxxdw,
+			cyyzw,
+			cyexm,
+			cyegx,
+			cyesfjhr,
+			cyelxdh,
+			cyecsny,
+			cyesfzjlx,
+			cyesfzjh,
+			cyemzm,
+			cyezzmmm,
+			cyejkzkm,
+			cyegzhxxdw,
+			cyezw,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			shzt,
+			spnr,
+			approve_by,
+			approve_date,
+			nj,
+			csd,
+			jg,
+			hkszd,
+			zsjj,
+			lzhzxxmc,
+			sfxwjxdxs,
+			zssyd,
+			photo,
+			newBjmc,
+			newZyid,
+			bgydlxzt,
+			bgydlx,
+			zylx_id,
+			xnxq
+		) VALUES (
+			#{id},
+			#{xm},
+			#{xbm},
+			#{csrq},
+			#{sfzjlxm},
+			#{sfzjh},
+			#{xmpy},
+			#{bjmc.id},
+			#{xh},
+			#{xslbm},
+			#{xxxsm},
+			#{rxfsm},
+			#{jdfsm},
+			#{gjdqm},
+			#{gatqwm},
+			#{hyzkm},
+			#{chcqj},
+			#{sfsqzn},
+			#{sydxzqhm},
+			#{csdxzqhm},
+			#{jgdxzqhm},
+			#{hkszdqxyxxxdz},
+			#{scpcs},
+			#{hkszdxzqhm},
+			#{hkxz},
+			#{xsjzdlx},
+			#{rxny},
+			#{zyId.id},
+			#{zyjc},
+			#{zyfx},
+			#{xz},
+			#{mzm},
+			#{zzmmm},
+			#{jkzkm},
+			#{xslym},
+			#{zsdx},
+			#{jhrlxdh},
+			#{byxx},
+			#{lxdh},
+			#{zsfs},
+			#{lzhzlx},
+			#{zkzh},
+			#{ksh},
+			#{kszf},
+			#{kstc},
+			#{ksjwbs},
+			#{tjjl},
+			#{lzhzbxfs},
+			#{lzhzxxdm},
+			#{xwjxd},
+			#{fdpyfs},
+			#{ywxm},
+			#{dzxx},
+			#{jtxdz},
+			#{jtyzbm},
+			#{jtdh},
+			#{cyyxm},
+			#{cyygx},
+			#{cyysfjhr},
+			#{cyylxdh},
+			#{cyycsny},
+			#{cyysfzjlx},
+			#{cyysfzjh},
+			#{cyymzm},
+			#{cyyzzmmm},
+			#{cyyjkzkm},
+			#{cyygzhxxdw},
+			#{cyyzw},
+			#{cyexm},
+			#{cyegx},
+			#{cyesfjhr},
+			#{cyelxdh},
+			#{cyecsny},
+			#{cyesfzjlx},
+			#{cyesfzjh},
+			#{cyemzm},
+			#{cyezzmmm},
+			#{cyejkzkm},
+			#{cyegzhxxdw},
+			#{cyezw},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{shzt},
+			#{spnr},
+			#{approveBy.id},
+			#{approveDate},
+			#{nj.id},
+			#{csd},
+			#{jg},
+			#{hkszd},
+			#{zsjj},
+			#{lzhzxxmc},
+			#{sfxwjxdxs},
+			#{zssyd},
+			#{photo},
+			#{newBjmc.id},
+			#{newZyid.id},
+			#{bgydlxzt},
+			#{bgydlx},
+			#{zylxId.id},
+			#{xnxq}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE xs_jbxx SET 	
+			xm = #{xm},
+			xbm = #{xbm},
+			csrq = #{csrq},
+			sfzjlxm = #{sfzjlxm},
+			sfzjh = #{sfzjh},
+			xmpy = #{xmpy},
+			bjmc = #{bjmc.id},
+			xh = #{xh},
+			xslbm = #{xslbm},
+			xxxsm = #{xxxsm},
+			rxfsm = #{rxfsm},
+			jdfsm = #{jdfsm},
+			gjdqm = #{gjdqm},
+			gatqwm = #{gatqwm},
+			hyzkm = #{hyzkm},
+			chcqj = #{chcqj},
+			sfsqzn = #{sfsqzn},
+			sydxzqhm = #{sydxzqhm},
+			csdxzqhm = #{csdxzqhm},
+			jgdxzqhm = #{jgdxzqhm},
+			hkszdqxyxxxdz = #{hkszdqxyxxxdz},
+			scpcs = #{scpcs},
+			hkszdxzqhm = #{hkszdxzqhm},
+			hkxz = #{hkxz},
+			xsjzdlx = #{xsjzdlx},
+			rxny = #{rxny},
+			zy_id = #{zyId.id},
+			zylx_id = #{zylxId.id},
+			zyjc = #{zyjc},
+			zyfx = #{zyfx},
+			xz = #{xz},
+			mzm = #{mzm},
+			zzmmm = #{zzmmm},
+			jkzkm = #{jkzkm},
+			xslym = #{xslym},
+			zsdx = #{zsdx},
+			jhrlxdh = #{jhrlxdh},
+			byxx = #{byxx},
+			lxdh = #{lxdh},
+			zsfs = #{zsfs},
+			lzhzlx = #{lzhzlx},
+			zkzh = #{zkzh},
+			ksh = #{ksh},
+			kszf = #{kszf},
+			kstc = #{kstc},
+			ksjwbs = #{ksjwbs},
+			tjjl = #{tjjl},
+			lzhzbxfs = #{lzhzbxfs},
+			lzhzxxdm = #{lzhzxxdm},
+			xwjxd = #{xwjxd},
+			fdpyfs = #{fdpyfs},
+			ywxm = #{ywxm},
+			dzxx = #{dzxx},
+			jtxdz = #{jtxdz},
+			jtyzbm = #{jtyzbm},
+			jtdh = #{jtdh},
+			cyyxm = #{cyyxm},
+			cyygx = #{cyygx},
+			cyysfjhr = #{cyysfjhr},
+			cyylxdh = #{cyylxdh},
+			cyycsny = #{cyycsny},
+			cyysfzjlx = #{cyysfzjlx},
+			cyysfzjh = #{cyysfzjh},
+			cyymzm = #{cyymzm},
+			cyyzzmmm = #{cyyzzmmm},
+			cyyjkzkm = #{cyyjkzkm},
+			cyygzhxxdw = #{cyygzhxxdw},
+			cyyzw = #{cyyzw},
+			cyexm = #{cyexm},
+			cyegx = #{cyegx},
+			cyesfjhr = #{cyesfjhr},
+			cyelxdh = #{cyelxdh},
+			cyecsny = #{cyecsny},
+			cyesfzjlx = #{cyesfzjlx},
+			cyesfzjh = #{cyesfzjh},
+			cyemzm = #{cyemzm},
+			cyezzmmm = #{cyezzmmm},
+			cyejkzkm = #{cyejkzkm},
+			cyegzhxxdw = #{cyegzhxxdw},
+			cyezw = #{cyezw},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			shzt = #{shzt},
+			approve_by= #{approveBy.id},
+			approve_date = #{approveDate},
+			nj = #{nj.id},
+			csd = #{csd},
+			jg = #{jg},
+			hkszd = #{hkszd},
+			zsjj = #{zsjj},
+			lzhzxxmc = #{lzhzxxmc},
+			sfxwjxdxs = #{sfxwjxdxs},
+			zssyd = #{zssyd},
+			photo = #{photo},
+			newBjmc = #{newBjmc.id},
+			newZyid = #{newZyid.id},
+			bgydlxzt = #{bgydlxzt},
+			bgydlx = #{bgydlx},
+			spnr = #{spnr}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateZsxx">
+		UPDATE xs_jbxx SET 	
+			xm = #{xm},
+			xbm = #{xbm},
+			csrq = #{csrq},
+			sfzjlxm = #{sfzjlxm},
+			sfzjh = #{sfzjh},
+			rxny = #{rxny},
+			zyjc = #{zyjc},
+			mzm = #{mzm},
+			hkszdxzqhm = #{hkszdxzqhm},
+			hkxz = #{hkxz},
+			xsjzdlx = #{xsjzdlx},
+			zzmmm = #{zzmmm},
+			jkzkm = #{jkzkm},
+			xslym = #{xslym},
+			zsdx = #{zsdx},
+			jhrlxdh = #{jhrlxdh},
+			byxx = #{byxx},
+			sydxzqhm = #{sydxzqhm},
+			zsfs = #{zsfs},
+			zkzh = #{zkzh},
+			ksh = #{ksh},
+			kszf = #{kszf},
+			kstc = #{kstc},
+			ksjwbs = #{ksjwbs},
+			tjjl = #{tjjl},
+			update_by = #{updateBy.id},
+			approve_by= #{approveBy.id},
+			approve_date = #{approveDate},
+			update_date = #{updateDate}
+		WHERE sfzjh = #{sfzjh}
+	</update>
+	
+	<update id="updateXsxx">
+		UPDATE xs_jbxx SET 	
+			xm = #{xm},
+			xbm = #{xbm},
+			csrq = #{csrq},
+			sfzjlxm = #{sfzjlxm},
+			sfzjh = #{sfzjh},
+			xmpy = #{xmpy},
+			bjmc = #{bjmc.id},
+			xh = #{xh},
+			xslbm = #{xslbm},
+			xxxsm = #{xxxsm},
+			rxfsm = #{rxfsm},
+			jdfsm = #{jdfsm},
+			gjdqm = #{gjdqm},
+			gatqwm = #{gatqwm},
+			hyzkm = #{hyzkm},
+			chcqj = #{chcqj},
+			sfsqzn = #{sfsqzn},
+			sydxzqhm = #{sydxzqhm},
+			csdxzqhm = #{csdxzqhm},
+			jgdxzqhm = #{jgdxzqhm},
+			hkszdqxyxxxdz = #{hkszdqxyxxxdz},
+			scpcs = #{scpcs},
+			hkszdxzqhm = #{hkszdxzqhm},
+			hkxz = #{hkxz},
+			xsjzdlx = #{xsjzdlx},
+			rxny = #{rxny},
+			zy_id = #{zyId.id},
+			zylx_id = #{zylxId.id},
+			zyfx = #{zyfx},
+			xz = #{xz},
+			mzm = #{mzm},
+			zzmmm = #{zzmmm},
+			jkzkm = #{jkzkm},
+			xslym = #{xslym},
+			zsdx = #{zsdx},
+			lxdh = #{lxdh},
+			zsfs = #{zsfs},
+			lzhzlx = #{lzhzlx},
+			zkzh = #{zkzh},
+			ksh = #{ksh},
+			kszf = #{kszf},
+			lzhzbxfs = #{lzhzbxfs},
+			lzhzxxdm = #{lzhzxxdm},
+			xwjxd = #{xwjxd},
+			fdpyfs = #{fdpyfs},
+			ywxm = #{ywxm},
+			dzxx = #{dzxx},
+			jtxdz = #{jtxdz},
+			jtyzbm = #{jtyzbm},
+			jtdh = #{jtdh},
+			cyyxm = #{cyyxm},
+			cyygx = #{cyygx},
+			cyysfjhr = #{cyysfjhr},
+			cyylxdh = #{cyylxdh},
+			cyycsny = #{cyycsny},
+			cyysfzjlx = #{cyysfzjlx},
+			cyysfzjh = #{cyysfzjh},
+			cyymzm = #{cyymzm},
+			cyyzzmmm = #{cyyzzmmm},
+			cyyjkzkm = #{cyyjkzkm},
+			cyygzhxxdw = #{cyygzhxxdw},
+			cyyzw = #{cyyzw},
+			cyexm = #{cyexm},
+			cyegx = #{cyegx},
+			cyesfjhr = #{cyesfjhr},
+			cyelxdh = #{cyelxdh},
+			cyecsny = #{cyecsny},
+			cyesfzjlx = #{cyesfzjlx},
+			cyesfzjh = #{cyesfzjh},
+			cyemzm = #{cyemzm},
+			cyezzmmm = #{cyezzmmm},
+			cyejkzkm = #{cyejkzkm},
+			cyegzhxxdw = #{cyegzhxxdw},
+			cyezw = #{cyezw},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE sfzjh = #{sfzjh}
+	</update>
+	
+	<update id="delete">
+		UPDATE xs_jbxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateShzt">
+		UPDATE xs_jbxx SET 
+			shzt = #{shzt},
+			approve_by= #{approveBy.id},
+			approve_date = #{approveDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateBanJi" parameterType="java.util.Map">
+		UPDATE xs_jbxx SET 
+			bjmc=#{name}, 
+			nj=#{njId}
+		WHERE id in
+		 <foreach collection="idList" index="index" item="id" open="(" separator="," close=")">  
+            #{id}   
+    	</foreach>
+	</update>
+	
+	<update id="updateXjShzt" parameterType="java.util.Map">
+		UPDATE xs_jbxx SET 
+			shzt=#{shzt}
+		WHERE id in
+		 <foreach collection="idList" index="index" item="id" open="(" separator="," close=")">  
+            #{id}   
+    	</foreach>
+	</update>
+	
+	<select id="getStudent" resultType="XsJbxx">
+	   select *  FROM xs_jbxx WHERE XNXQ=#{xnxq}
+	</select>
+</mapper>

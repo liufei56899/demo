@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.bj.dao.BjJbxxDao">
+    
+	<sql id="bjJbxxColumns">
+		a.id AS "id",
+		a.bjmc AS "bjmc",
+		a.nf AS "nf",
+		a.xq_id AS "xqId",
+		a.zy_id AS "zyId.id",
+		(SELECT z.zymc FROM zy_jbxx z where z.id = a.zy_id) as "zyId.zymc",
+		a.rnrs AS "rnrs",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.zylx_id AS "zylxId.id",
+		(SELECT lxmc FROM zylx_jbxx where id = a.zylx_id) as "zylxId.lxmc",
+		a.bh AS "bh",
+		a.njid AS "njid.id",
+		b.xnmc AS "njid.nf",
+		a.jbny AS "jbny",
+		a.xqmc AS "xqmc",			
+		(SELECT CONCAT(jslh,'#',jsmph) AS jsbh  FROM classroom where id=a.classroomid) as "jsbh", 
+		a.sfssmzjxb AS "sfssmzjxb",
+		a.ssmzjxbmzyymc AS "ssmzjxbmzyymc",
+		a.ssmzsyjxms AS "ssmzsyjxms",
+		a.sfqrz AS "sfqrz",
+		a.ndxjzzb AS "ndxjzzb",
+		a.ndxzzzb AS "ndxzzzb",
+		a.sfbyb AS "sfbyb",
+		a.byrq AS "byrq",
+		a.classroomid AS "classroomid",
+		a.js_id AS "jsId.id",
+		(SELECT name FROM sys_user WHERE id = a.js_id) as "jsId.name"
+	</sql>
+	
+	<sql id="bjJbxxJoins">
+		LEFT JOIN xnxq_jbxx b ON b.id = a.njid
+	</sql>
+    
+	<select id="get" resultType="BjJbxx">
+		SELECT 
+			<include refid="bjJbxxColumns"/>
+		FROM bj_jbxx a
+		<include refid="bjJbxxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BjJbxx">
+		SELECT 
+			<include refid="bjJbxxColumns"/>
+		FROM bj_jbxx a
+		<include refid="bjJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="bjmc != null and bjmc != ''">
+				AND a.bjmc like 
+				<if test="dbName == 'oracle'">'%'||#{bjmc}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bjmc}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bjmc},'%')</if>
+			</if>
+			<if test="bh != null and bh != ''">
+				AND a.bh  like 
+				<if test="dbName == 'oracle'">'%'||#{bh}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bh}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bh},'%')</if>
+			</if>
+			<if test="nf != null and nf != ''">
+				AND a.nf = #{nf}
+			</if>
+			<if test="zyId != null and zyId.id != null and zyId.id != ''">
+				AND a.zy_id = #{zyId.id}
+			</if>
+			<if test="zylxId != null and zylxId.id != null and zylxId.id != ''">
+				AND a.zylx_id = #{zylxId.id}
+			</if>
+			<if test="jsId != null and jsId.id != null and jsId.id  != ''">
+				AND a.js_id = #{jsId.id}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BjJbxx">
+		SELECT 
+			<include refid="bjJbxxColumns"/>
+		FROM bj_jbxx a
+		<include refid="bjJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findBjJbxxList" resultType="BjJbxx">
+		SELECT 
+			<include refid="bjJbxxColumns"/>
+		FROM bj_jbxx a
+		<include refid="bjJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.bjmc = #{bjmc}
+			<if test="id !=null and id!= ''">
+				and a.id !=#{id}
+			</if>
+		</where>		
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO bj_jbxx(
+			id,
+			bjmc,
+			nf,
+			xq_id,
+			zy_id,
+			rnrs,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			zylx_id,
+			bh,
+			njid,
+			jbny,
+			xqmc,
+			jsbh,
+			sfssmzjxb,
+			ssmzjxbmzyymc,
+			ssmzsyjxms,
+			sfqrz,
+			ndxjzzb,
+			ndxzzzb,
+			sfbyb,
+			byrq,
+			js_id,
+			classroomid
+		) VALUES (
+			#{id},
+			#{bjmc},
+			#{nf},
+			#{xqId},
+			#{zyId.id},
+			#{rnrs},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{zylxId.id},
+			#{bh},
+			#{njid.id},
+			#{jbny},
+			#{xqmc},
+			#{jsbh},
+			#{sfssmzjxb},
+			#{ssmzjxbmzyymc},
+			#{ssmzsyjxms},
+			#{sfqrz},
+			#{ndxjzzb},
+			#{ndxzzzb},
+			#{sfbyb},
+			#{byrq},
+			#{jsId.id},
+			#{classroomid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bj_jbxx SET 	
+			bjmc = #{bjmc},
+			nf = #{nf},
+			xq_id = #{xqId},
+			zy_id = #{zyId.id},
+			rnrs = #{rnrs},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			zylx_id = #{zylxId.id},
+			bh = #{bh},
+			njid = #{njid.id},
+			jbny = #{jbny},
+			xqmc = #{xqmc},
+			jsbh = #{jsbh},
+			sfssmzjxb = #{sfssmzjxb},
+			ssmzjxbmzyymc = #{ssmzjxbmzyymc},
+			ssmzsyjxms = #{ssmzsyjxms},
+			sfqrz = #{sfqrz},
+			ndxjzzb = #{ndxjzzb},
+			ndxzzzb = #{ndxzzzb},
+			sfbyb = #{sfbyb},
+			byrq = #{byrq},
+			js_id = #{jsId.id},
+			classroomid=#{classroomid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bj_jbxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<select id="findAll" resultType="XnJbxx">
+	SELECT id,nf FROM xn_jbxx WHERE del_flag='0' and id in(SELECT njid FROM bj_jbxx WHERE  del_flag='0')
+	 ORDER BY nf DESC
+	</select>
+	<select id="findAllBJ" resultType="BjJbxx">
+	SELECT * FROM bj_jbxx WHERE njid=#{id} and  del_flag='0'
+	<if test="remarks!= null and remarks != ''">
+				AND zy_id = #{remarks}
+			</if>
+	</select>
+</mapper>

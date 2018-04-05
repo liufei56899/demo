@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.zyzl.dao.XxZyzlDao">
+    
+	<sql id="xxZyzlColumns">
+		a.id AS "id",
+		@rownum:=@rownum+1 AS "xh",
+		a.zlname AS "zlname",
+		a.uploaddate AS "uploaddate",
+		a.uploadname AS "uploadname",
+		a.fj AS "fj",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="xxZyzlJoins">
+	</sql>
+    
+	<select id="get" resultType="XxZyzl">
+		SELECT 
+			<include refid="xxZyzlColumns"/>
+		FROM xx_zyzl a
+		<include refid="xxZyzlJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="XxZyzl">
+		SELECT 
+			<include refid="xxZyzlColumns"/>
+		FROM (SELECT @rownum:=0) r, xx_zyzl a
+		<include refid="xxZyzlJoins"/>
+		<where>
+			
+			<if test="zlname != null and zlname != ''">
+				AND a.zlname = #{zlname}
+			</if>
+			<if test="uploaddate != null and uploaddate != ''">
+				AND a.uploaddate = #{uploaddate}
+			</if>
+			<if test="uploadname != null and uploadname != ''">
+				AND a.uploadname = #{uploadname}
+			</if>
+			<if test="fj != null and fj != ''">
+				AND a.fj = #{fj}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="XxZyzl">
+		SELECT 
+			<include refid="xxZyzlColumns"/>
+		FROM xx_zyzl a
+		<include refid="xxZyzlJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO xx_zyzl(
+			id,
+			zlname,
+			uploaddate,
+			uploadname,
+			fj,
+			remarks
+		) VALUES (
+			#{id},
+			#{zlname},
+			#{uploaddate},
+			#{uploadname},
+			#{fj},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE xx_zyzl SET 	
+			zlname = #{zlname},
+			uploaddate = #{uploaddate},
+			uploadname = #{uploadname},
+			fj = #{fj},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM xx_zyzl
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

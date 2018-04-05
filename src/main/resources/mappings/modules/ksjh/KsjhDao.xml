@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ksjh.dao.KsjhDao">
+    
+	<sql id="ksjhColumns">
+		a.id AS "id",
+		a.ksjhmc AS "ksjhmc",
+		a.stime AS "stime",
+		a.etime AS "etime",
+		a.jkrs AS "jkrs",
+		a.kc_id AS "kcId",
+		a.kcsl AS "kcsl",
+		a.ckrs AS "ckrs",
+		a.jhzt AS "jhzt",
+		a.jcls_id AS "jclsId",
+		a.jcname AS "jcname",
+		a.bj_id AS "bjId",
+		a.create_by AS "createBy.id",
+		(SELECT NAME FROM sys_user WHERE id = CONVERT(a.create_by USING utf8)COLLATE utf8_unicode_ci) as "createBy.name",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="ksjhJoins">
+	</sql>
+    
+	<select id="get" resultType="Ksjh">
+		SELECT 
+			<include refid="ksjhColumns"/>
+		FROM ksjh a
+		<include refid="ksjhJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Ksjh">
+		SELECT 
+			<include refid="ksjhColumns"/>
+		FROM ksjh a
+		<include refid="ksjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="ksjhmc != null and ksjhmc != ''">
+				AND a.ksjhmc like CONCAT(CONCAT('%', #{ksjhmc}), '%')
+			</if>
+			<if test="jhzt != null and jhzt != ''">
+				AND a.jhzt = #{jhzt}
+			</if>
+			<if test="stime != null and stime != ''">
+				AND DATE(a.stime) >= DATE(#{stime})
+			</if>
+			<if test="etime != null and etime != ''">
+				<![CDATA[
+				     AND DATE(a.etime) <= DATE(#{etime})
+				]]>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Ksjh">
+		SELECT 
+			<include refid="ksjhColumns"/>
+		FROM ksjh a
+		<include refid="ksjhJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 根据考试计划id查询考场信息 -->
+	<select id="findClassroom" parameterType="java.lang.String" resultType="KcJbxx">
+		SELECT * FROM kc_jbxx WHERE ksjh_id = #{id}
+		<!-- <where>
+			kc.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND ksjh_id = #{id}
+			</if>
+		</where> -->
+	</select>
+	
+	<!-- 查询班级信息 -->
+	<select id="findBjJbxx" resultType="BjJbxx">
+		SELECT * FROM bj_jbxx
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ksjh(
+			id,
+			ksjhmc,
+			stime,
+			etime,
+			kc_id,
+			jkrs,
+			kcsl,
+			ckrs,
+			jhzt,
+			jcls_id,
+			jcname,
+			bj_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{ksjhmc},
+			#{stime},
+			#{etime},
+			#{kcId},
+			#{jkrs},
+			#{kcsl},
+			#{ckrs},
+			#{jhzt},
+			#{jclsId},
+			#{jcname},
+			#{bjId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ksjh SET 	
+			ksjhmc = #{ksjhmc},
+			stime = #{stime},
+			etime = #{etime},
+			kc_id = #{kcId},
+			jkrs = #{jkrs},
+			kcsl = #{kcsl},
+			ckrs = #{ckrs},
+			jhzt = #{jhzt},
+			jcls_id = #{jclsId},
+			jcname = #{jcname},
+			bj_id = #{bjId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ksjh SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

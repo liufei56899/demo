@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.AreaDao">
+    
+	<sql id="areaColumns">
+		a.id,
+		a.parent_id AS "parent.id",
+		a.parent_ids,
+		a.code,
+		a.name,
+		a.sort,
+		a.type,
+		a.remarks,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag,
+		p.name AS "parent.name"
+	</sql>
+	
+	<sql id="areaJoins">
+		LEFT JOIN sys_office p ON p.id = a.parent_id
+    </sql>
+    
+	<select id="get" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findAllP" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		and a.type = #{type}
+		ORDER BY a.code
+	</select>
+	
+	<select id="findAllByChr" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		and a.parent_id=#{parent.id} OR
+		a.parent_ids=#{id}
+		ORDER BY a.code
+	</select>
+	
+	<select id="findList" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<!-- 数据范围过滤 -->
+		${sqlMap.dsf}
+		OR a.id = #{currentUser.office.area.id}
+		ORDER BY a.code
+	</select>
+	
+	<select id="findAllList" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		ORDER BY a.code
+	</select>
+	
+	<select id="findByParentIdsLike" resultType="Area">
+		SELECT
+			a.id,
+			a.parent_id AS "parent.id",
+			a.parent_ids
+		FROM sys_area a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds}
+		ORDER BY a.code
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_area(
+			id, 
+			parent_id, 
+			parent_ids, 
+			code, 
+			name, 
+			sort,
+			type, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			remarks, 
+			del_flag
+		) VALUES (
+			#{id}, 
+			#{parent.id}, 
+			#{parentIds}, 
+			#{code}, 
+			#{name}, 
+			#{sort}, 
+			#{type}, 
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks}, 
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_area SET 
+			parent_id = #{parent.id}, 
+			parent_ids = #{parentIds}, 
+			code = #{code}, 
+			name = #{name}, 
+			sort = #{sort}, 
+			type = #{type}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateParentIds">
+		UPDATE sys_area SET 
+			parent_id = #{parent.id}, 
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_area SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} OR parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+					<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+	
+	<!-- 页面首次加载时登记数查询结果 -->
+	<select id="findByAll" resultType="String">
+SELECT  COUNT(*)  FROM  zsdj zsdj left join  zsjh zsjh on zsdj.jh_id=zsjh.id
+  WHERE zsjh.zsnd=#{zsnd}  AND zsjh.del_flag='0' AND zsjh.zt='3'
+ <if test="type==2">and zsdj.SF=#{id}</if>
+ <if test="type==3">and zsdj.cs=#{id}</if>
+ <if test="type==4">and zsdj.qx=#{id}</if>
+	</select>
+	<!-- 页面首次加载时完成数查询结果 -->
+	<select id="findByAllWC" resultType="String">
+ SELECT COUNT(*) FROM bd_jbxx  bd
+ left join  zsjh zsjh on bd.jh_id=zsjh.id
+  WHERE zsjh.zsnd=#{zsnd}  AND zsjh.del_flag='0' AND zsjh.zt='3' and bd.jfzt='1'
+ <if test="type==2">and bd.SF=#{id}</if>
+ <if test="type==3">and bd.cs=#{id}</if>
+ <if test="type==4">and bd.qx=#{id}</if>
+	</select>
+	
+	<select id="findByAllList" resultType="Area">
+	SELECT id,NAME FROM sys_area WHERE id!='0' AND id!='1'
+	</select>
+	
+	<select id="findBySF" resultType="Area">
+	SELECT id,NAME FROM sys_area WHERE parent_id='1'
+	</select>
+	<select id="findByAllZSRS" resultType="Map">
+	SELECT IFNULL(SUM(gr.zsrs),0) as zzsrs FROM jh_fj_gr_rw rw  LEFT JOIN jh_fj_gr gr   ON
+	rw.JH_FJ_ID=gr.id WHERE gr.jh_id in (SELECT id from zsjh WHERE zsnd=#{zsnd}  AND del_flag='0' AND zt='3')
+ <if test="type==2">AND rw.SF=#{id}</if>
+ <if test="type==3">AND rw.cs=#{id}</if>
+ <if test="type==4">AND rw.qx=#{id}</if>
+
+	</select>
+	<select id="findByType" resultType="String">
+	SELECT type FROM sys_area WHERE id=#{id}
+	</select>
+	
+	
+<select id="findByAREA" parameterType="Map" resultType="Map">
+	SELECT rws.dqid AS id,IFNULL(rws.zzsrs,0) AS zrws,IFNULL(djs.dqdjs,0) AS zdjs,IFNULL(wcs.dqwcs,0) AS zwcs,
+concat(round((IFNULL((wcs.dqwcs*1.0/rws.zzsrs),0)*100),2),'%') AS wcPercent
+FROM 
+(SELECT IFNULL(
+ <if test="type==2"> rw.SF</if>
+ <if test="type==3"> rw.cs</if>
+ <if test="type==4"> rw.qx</if>
+ <if test="type==5"> rw.xz</if>,#{id}) AS dqid,IFNULL(SUM(gr.zsrs),0) as zzsrs 
+FROM jh_fj_gr_rw rw  LEFT JOIN jh_fj_gr gr   ON
+	rw.JH_FJ_ID=gr.id WHERE gr.jh_id in (SELECT id from zsjh WHERE zsnd in(${zsnd})  AND del_flag='0' AND zt='3')
+ <if test="type==2">AND rw.SF=#{id}</if>
+ <if test="type==3">AND rw.cs=#{id}</if>
+ <if test="type==4">AND rw.qx=#{id}</if>
+ <if test="type==5">AND rw.xz=#{id}</if>) rws
+LEFT JOIN
+(SELECT IFNULL(  
+ <if test="type==2"> zsdj.SF</if>
+ <if test="type==3"> zsdj.cs</if>
+ <if test="type==4"> zsdj.qx</if>
+ <if test="type==5"> zsdj.jd</if>,#{id}) AS dqid,COUNT(*) AS dqdjs  FROM  zsdj zsdj left join  zsjh zsjh on zsdj.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})   AND zsjh.del_flag='0' AND zsjh.zt='3'
+ <if test="type==2">and zsdj.SF=#{id}</if>
+ <if test="type==3">and zsdj.cs=#{id}</if>
+ <if test="type==4">and zsdj.qx=#{id}</if>
+ <if test="type==5">and zsdj.jd=#{id}</if>) djs ON rws.dqid=djs.dqid
+left JOIN 
+(SELECT IFNULL(
+ <if test="type==2"> bd.SF</if>
+ <if test="type==3"> bd.cs</if>
+ <if test="type==4"> bd.qx</if>
+ <if test="type==5"> bd.jd</if>,#{id})  AS dqid,COUNT(*) AS dqwcs FROM bd_jbxx  bd
+ left join  zsjh zsjh on bd.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})  AND zsjh.del_flag='0' AND zsjh.zt='3' and bd.jfzt='1'
+ <if test="type==2">and bd.SF=#{id}</if>
+ <if test="type==3">and bd.cs=#{id}</if>
+ <if test="type==4">and bd.qx=#{id}</if>
+ <if test="type==5">and bd.jd=#{id}</if>) wcs ON rws.dqid=wcs.dqid
+ </select>
+ 
+ 
+ 	<!-- 导出 -->
+<select id="expFindByAREA" parameterType="Map" resultType="Map">
+SELECT area.id AS id,area.name AS name,IFNULL(rws.zzsrs,0) AS zrws,IFNULL(djs.dqdjs,0) AS zdjs,IFNULL(wcs.dqwcs,0) AS zwcs,
+concat(round((IFNULL((wcs.dqwcs*1.0/rws.zzsrs),0)*100),2),'%') AS wcPercent,${zsnd} AS zsnd FROM
+sys_area area LEFT JOIN 
+(SELECT rw.SF AS dqid,IFNULL(SUM(gr.zsrs),0) as zzsrs 
+FROM jh_fj_gr_rw rw  LEFT JOIN jh_fj_gr gr   ON
+	rw.JH_FJ_ID=gr.id WHERE gr.jh_id in (SELECT id from zsjh WHERE zsnd in(${zsnd})  AND del_flag='0' AND zt='3')
+ GROUP BY rw.SF
+UNION
+SELECT rw.cs AS dqid,IFNULL(SUM(gr.zsrs),0) as zzsrs 
+FROM jh_fj_gr_rw rw  LEFT JOIN jh_fj_gr gr   ON
+	rw.JH_FJ_ID=gr.id WHERE gr.jh_id in (SELECT id from zsjh WHERE zsnd in(${zsnd})  AND del_flag='0' AND zt='3')
+ GROUP BY rw.cs
+UNION
+SELECT rw.qx AS dqid,IFNULL(SUM(gr.zsrs),0) as zzsrs 
+FROM jh_fj_gr_rw rw  LEFT JOIN jh_fj_gr gr   ON
+	rw.JH_FJ_ID=gr.id WHERE gr.jh_id in (SELECT id from zsjh WHERE zsnd in(${zsnd})  AND del_flag='0' AND zt='3')
+ GROUP BY rw.qx
+UNION
+SELECT rw.xz AS dqid,IFNULL(SUM(gr.zsrs),0) as zzsrs 
+FROM jh_fj_gr_rw rw  LEFT JOIN jh_fj_gr gr   ON
+	rw.JH_FJ_ID=gr.id WHERE gr.jh_id in (SELECT id from zsjh WHERE zsnd in(${zsnd})  AND del_flag='0' AND zt='3')
+ GROUP BY rw.xz
+) rws ON area.id=rws.dqid
+LEFT JOIN 
+(SELECT zsdj.SF AS dqid,COUNT(*) AS dqdjs  FROM  zsdj zsdj left join  zsjh zsjh on zsdj.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})   AND zsjh.del_flag='0' AND zsjh.zt='3'
+ GROUP BY zsdj.SF
+UNION
+SELECT zsdj.cs AS dqid,COUNT(*) AS dqdjs  FROM  zsdj zsdj left join  zsjh zsjh on zsdj.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})   AND zsjh.del_flag='0' AND zsjh.zt='3'
+ GROUP BY zsdj.cs
+UNION
+SELECT zsdj.qx AS dqid,COUNT(*) AS dqdjs  FROM  zsdj zsdj left join  zsjh zsjh on zsdj.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})   AND zsjh.del_flag='0' AND zsjh.zt='3'
+ GROUP BY zsdj.qx
+UNION
+SELECT zsdj.jd AS dqid,COUNT(*) AS dqdjs  FROM  zsdj zsdj left join  zsjh zsjh on zsdj.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})   AND zsjh.del_flag='0' AND zsjh.zt='3'
+ GROUP BY zsdj.jd
+) djs ON area.id=djs.dqid
+left JOIN 
+(SELECT bd.SF  AS dqid,COUNT(*) AS dqwcs FROM bd_jbxx  bd
+ left join  zsjh zsjh on bd.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})  AND zsjh.del_flag='0' AND zsjh.zt='3' and bd.jfzt='1'
+ GROUP BY bd.SF
+UNION
+SELECT bd.cs  AS dqid,COUNT(*) AS dqwcs FROM bd_jbxx  bd
+ left join  zsjh zsjh on bd.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})  AND zsjh.del_flag='0' AND zsjh.zt='3' and bd.jfzt='1'
+ GROUP BY bd.cs
+UNION
+SELECT bd.qx  AS dqid,COUNT(*) AS dqwcs FROM bd_jbxx  bd
+ left join  zsjh zsjh on bd.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})  AND zsjh.del_flag='0' AND zsjh.zt='3' and bd.jfzt='1'
+ GROUP BY bd.qx
+UNION
+SELECT bd.jd  AS dqid,COUNT(*) AS dqwcs FROM bd_jbxx  bd
+ left join  zsjh zsjh on bd.jh_id=zsjh.id
+  WHERE zsjh.zsnd in(${zsnd})  AND zsjh.del_flag='0' AND zsjh.zt='3' and bd.jfzt='1'
+ GROUP BY bd.jd
+) wcs ON area.id=wcs.dqid
+WHERE area.id!=0 AND area.id!=1 
+<if test="id!=1">AND area.id like CONCAT(#{id}, '%')</if>
+ </select>
+</mapper>

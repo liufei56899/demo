@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.xnxq.dao.XnxqJbxxDao">
+    
+	<sql id="xnxqJbxxColumns">
+		a.id AS "id",
+		a.xnmc AS "xnmc",
+		a.xq AS "xq",
+		a.kssj AS "kssj",
+		a.jssj AS "jssj",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		<!-- a.remarks AS "remarks", -->
+		sy.label as "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="xnxqJbxxJoins">
+		left join sys_dict sy on sy.value = a.xq
+			and sy.type='term_type'
+	</sql>
+	<select id="getxnxx" resultType="XnxqJbxx">
+		SELECT 
+			<include refid="xnxqJbxxColumns"/>
+		FROM xnxq_jbxx a
+			<include refid="xnxqJbxxJoins"/>
+		group by a.xnmc
+	</select>
+	<select id="get" resultType="XnxqJbxx">
+		SELECT 
+			<include refid="xnxqJbxxColumns"/>
+		FROM xnxq_jbxx a
+		<include refid="xnxqJbxxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="XnxqJbxx">
+		SELECT 
+			<include refid="xnxqJbxxColumns"/>
+		FROM xnxq_jbxx a
+		<include refid="xnxqJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="xnmc != null and xnmc != ''">
+				AND a.xnmc = #{xnmc}
+			</if>
+			<if test="xq != null and xq != ''">
+				AND a.xq = #{xq}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="XnxqJbxx">
+		SELECT 
+			<include refid="xnxqJbxxColumns"/>
+		FROM xnxq_jbxx a
+		<include refid="xnxqJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findXnxqList" resultType="XnxqJbxx">
+		SELECT 
+			<include refid="xnxqJbxxColumns"/>
+		FROM xnxq_jbxx a
+		<include refid="xnxqJbxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.xnmc = #{xnmc}
+			<if test="id != null and id != ''">
+			  and a.ID != #{id}
+			</if>
+			<if test="xq != null and xq != ''">
+			  and a.xq = #{xq}
+			</if>
+		</where>		
+	</select>
+	<select id="findXnxq" resultType="XnxqJbxx">
+		SELECT  id,xnmc FROM xnxq_jbxx where del_flag = 0
+	</select>
+	<select id="getAll" resultType="XnxqJbxx">
+		SELECT  id,xnmc FROM xnxq_jbxx where del_flag = 0
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO xnxq_jbxx(
+			id,
+			xnmc,
+			xq,
+			kssj,
+			jssj,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{xnmc},
+			#{xq},
+			#{kssj},
+			#{jssj},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE xnxq_jbxx SET 	
+			xnmc = #{xnmc},
+			xq = #{xq},
+			kssj = #{kssj},
+			jssj = #{jssj},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE xnxq_jbxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
